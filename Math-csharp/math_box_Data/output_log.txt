@@ -1,0 +1,61 @@
+Initialize engine version: 4.3.3f1 (c8ca9b6b9936)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dum.dll 9.18.13.3221]
+    Renderer: NVIDIA GeForce GTX 550 Ti
+    Vendor:   NVIDIA
+    VRAM:     977 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\Documents\Unity Project\Math\math_box_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\Documents\Unity Project\Math\math_box_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+- Completed reload, in  0.046 seconds
+<RI> Initializing input.
+<RI.Hid> Failed to create device file:
+ 2 系統找不到指定的檔案。
+
+ 
+(Filename:  Line: 54)
+
+<RI.Hid> Failed to create device file:
+ 2 系統找不到指定的檔案。
+
+ 
+(Filename:  Line: 54)
+
+<RI.Hid> Failed to create device file:
+ 2 系統找不到指定的檔案。
+
+ 
+(Filename:  Line: 54)
+
+<RI> Input initialized.
+desktop: 1680x1050 59Hz; virtual: 2960x1050 at 0,0
+UnloadTime: 0.237298 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 122.
+Total: 0.602111 ms (FindLiveObjects: 0.007464 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.146795 ms  DeleteObjects: 0.013684 ms)
+
+UnloadTime: 0.284261 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 119.
+Total: 0.544885 ms (FindLiveObjects: 0.004976 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.131867 ms  DeleteObjects: 0.019282 ms)
+
+UnloadTime: 0.195001 ms
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 162.
+Total: 0.570699 ms (FindLiveObjects: 0.006842 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.146484 ms  DeleteObjects: 0.020215 ms)
+
+Releasing render texture that is set to be RenderTexture.active!
+ 
+(Filename:  Line: 409)
+
+RenderTexture warning: Destroying active render texture. Switching to main context.
+ 
+(Filename:  Line: 526)
+
