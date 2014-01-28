@@ -33,29 +33,53 @@ Loading D:\Documents\Unity Project\Math\math_box_Data\Managed\Assembly-CSharp.dl
 
 <RI> Input initialized.
 desktop: 1680x1050 59Hz; virtual: 2960x1050 at 0,0
-UnloadTime: 0.237298 ms
+UnloadTime: 0.232944 ms
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
 Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 122.
-Total: 0.602111 ms (FindLiveObjects: 0.007464 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.146795 ms  DeleteObjects: 0.013684 ms)
+Total: 0.520938 ms (FindLiveObjects: 0.007775 ms CreateObjectMapping: 0.005909 ms MarkObjects: 0.117871 ms  DeleteObjects: 0.006531 ms)
 
-UnloadTime: 0.284261 ms
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 119.
-Total: 0.544885 ms (FindLiveObjects: 0.004976 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.131867 ms  DeleteObjects: 0.019282 ms)
-
-UnloadTime: 0.195001 ms
+UnloadTime: 0.199045 ms
 Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
-Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 162.
-Total: 0.570699 ms (FindLiveObjects: 0.006842 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.146484 ms  DeleteObjects: 0.020215 ms)
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 178.
+Total: 0.585938 ms (FindLiveObjects: 0.007464 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.161724 ms  DeleteObjects: 0.019593 ms)
 
-Releasing render texture that is set to be RenderTexture.active!
- 
-(Filename:  Line: 409)
+UnloadTime: 0.301055 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
-RenderTexture warning: Destroying active render texture. Switching to main context.
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 182.
+Total: 0.549861 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.160791 ms  DeleteObjects: 0.011818 ms)
+
+UnloadTime: 0.299500 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 136.
+Total: 0.551105 ms (FindLiveObjects: 0.005287 ms CreateObjectMapping: 0.008397 ms MarkObjects: 0.160169 ms  DeleteObjects: 0.026435 ms)
+
+UnloadTime: 0.185049 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 23 unused Assets to reduce memory usage. Loaded Objects now: 128.
+Total: 1.146996 ms (FindLiveObjects: 0.005909 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.123470 ms  DeleteObjects: 0.657470 ms)
+
+UnloadTime: 0.193446 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 179.
+Total: 0.578163 ms (FindLiveObjects: 0.007464 ms CreateObjectMapping: 0.007464 ms MarkObjects: 0.172920 ms  DeleteObjects: 0.027679 ms)
+
+UnloadTime: 0.363879 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 182.
+Total: 0.558570 ms (FindLiveObjects: 0.006842 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.178829 ms  DeleteObjects: 0.012129 ms)
+
+<RI.Hid> Device is not supported: CTE-450 (65280, 0x000a).
  
-(Filename:  Line: 526)
+(Filename:  Line: 111)
+
+<RI.Hid> Device is not supported: CTE-450 (0013, 0x0001).
+ 
+(Filename:  Line: 111)
 

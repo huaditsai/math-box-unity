@@ -58,7 +58,7 @@ public class MainMenu : MonoBehaviour
 
         if (pageNum == 0 && GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), "變化\n組合", "BtnMatrix"))
         {
-            Application.LoadLevel("MatrixMenu");
+            Application.LoadLevel("MatrixMenuTwo");
         }
 
         if (pageNum != 0 && pageNum * 6 - 1 < BookSampleTexture.Length)

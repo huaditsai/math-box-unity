@@ -53,7 +53,7 @@ public class MatrixMenu : MonoBehaviour
                     //GameObject planeClone = Instantiate(plane[matrix_index], Vector3.zero, Quaternion.identity) as GameObject;
 
                     Common.matrix_size = matrix_size;
-                    Application.LoadLevel("MatrixMenu2");
+                    Application.LoadLevel("MatrixMenuTwo");
 
                 }
 

@@ -7,7 +7,7 @@ public class MatrixMenuTwo : MonoBehaviour
     public GUISkin gSkin;
 
     public Texture backgroundTexture;
-    public Texture[] renderTexture;
+    public Texture[] renderTexture; //要有兩個camera才Build成功
     private bool isBigRenderTexture = false;
 
     public Texture[] planeTexture;
@@ -19,8 +19,10 @@ public class MatrixMenuTwo : MonoBehaviour
     private int level = 1;
     private string levelText = "第 1 層";
 
-
     private int[, ,] matrix = new int[2, 2, 2];
+
+
+    public Texture[] btnGoBackTexture;
 
     // Use this for initialization
     void Start()
@@ -67,12 +69,12 @@ public class MatrixMenuTwo : MonoBehaviour
 
         GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture, ScaleMode.StretchToFill);
 
-        if (GUI.Button(new Rect(screen_width * 0.1f - texture_width / 4, screen_height * 0.9f - texture_height / 4, texture_width / 2, texture_height / 2), "回上一步"))
+        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width / 4, screen_height * 0.9f - texture_height / 4, texture_width / 2, texture_height / 2), btnGoBackTexture[0], "BtnGoBack"))
         {
-            Application.LoadLevel("MatrixMenu");
+            Application.LoadLevel("MainMenu");
         }
 
-        if (GUI.Button(new Rect(screen_width * 0.9f - texture_width / 4, screen_height * 0.9f - texture_height / 4, texture_width / 2, texture_height / 2), "確認成型"))
+        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 4, screen_height * 0.9f - texture_height / 4, texture_width / 2, texture_height / 2), btnGoBackTexture[1], "BtnGoBack"))
         {
             Application.LoadLevel("Main");
         }
@@ -106,13 +108,13 @@ public class MatrixMenuTwo : MonoBehaviour
         }
 
         // 層數
-        if (level < planeSize && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.125f, screen_height * 0.05f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_U"))
+        if (level < planeSize && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.25f, screen_height * 0.1f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_U"))
         {
             level++;
             levelText = "第 " + level + " 層";
         }
         GUI.Label(new Rect(screen_width * 0.7f - texture_width * 0.5f, screen_height * 0.2f + plane_height / 2f - texture_height / 2, texture_width, texture_height), levelText, "Level");
-        if (level > 1 && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.125f, screen_height * 0.35f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_D"))
+        if (level > 1 && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.25f, screen_height * 0.3f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_D"))
         {
             level--;
             levelText = "第 " + level + " 層";
@@ -155,4 +157,6 @@ public class MatrixMenuTwo : MonoBehaviour
             isBigRenderTexture = false;
 
     }
+
+ 
 }
