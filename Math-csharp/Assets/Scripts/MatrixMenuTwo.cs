@@ -77,6 +77,7 @@ public class MatrixMenuTwo : MonoBehaviour
         if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 4, screen_height * 0.9f - texture_height / 4, texture_width / 2, texture_height / 2), btnGoBackTexture[1], "BtnGoBack"))
         {
             Application.LoadLevel("Main");
+            Common.lastLevel = "MatrixMenuTwo";
         }
 
         for (int i = 1; i <= planeSize; i++)

@@ -104,7 +104,7 @@ public class AddBox : MonoBehaviour
         scale = 0.15f;
         if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.9f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
         {
-            Application.LoadLevel("MatrixMenuTwo");
+            Application.LoadLevel(Common.lastLevel); //變化組合回到編輯, 範例回到範例選擇
         }
 
         //設定

@@ -65,32 +65,38 @@ public class MainMenu : MonoBehaviour
             if (GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 - 1], "BtnMatrix"))
             {
                 Application.LoadLevel("Main");
+                Common.lastLevel = "MainMenu";
             }
 
         if (pageNum * 6 + 0 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 0], "BtnMatrix"))
             {
                 Application.LoadLevel("Main");
+                Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 1 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.7f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 1], "BtnMatrix"))
             {
                 Application.LoadLevel("Main");
+                Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 2 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 2], "BtnMatrix"))
             {
                 Application.LoadLevel("Main");
+                Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 3 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 3], "BtnMatrix"))
             {
                 Application.LoadLevel("Main");
+                Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 4 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.7f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 4], "BtnMatrix"))
             {
                 Application.LoadLevel("Main");
+                Common.lastLevel = "MainMenu";
             }
 
 
