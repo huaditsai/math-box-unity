@@ -64,6 +64,7 @@ public class MainMenu : MonoBehaviour
         if (pageNum != 0 && pageNum * 6 - 1 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 - 1], "BtnMatrix"))
             {
+                Examples(pageNum * 6 - 1);
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MainMenu";
             }
@@ -71,30 +72,35 @@ public class MainMenu : MonoBehaviour
         if (pageNum * 6 + 0 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 0], "BtnMatrix"))
             {
+                Examples(pageNum * 6 + 0);
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 1 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.7f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 1], "BtnMatrix"))
             {
+                Examples(pageNum * 6 + 1);
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 2 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 2], "BtnMatrix"))
             {
+                Examples(pageNum * 6 + 2);
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 3 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 3], "BtnMatrix"))
             {
+                Examples(pageNum * 6 + 3);
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MainMenu";
             }
         if (pageNum * 6 + 4 < BookSampleTexture.Length)
             if (GUI.Button(new Rect(screen_width * 0.7f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 4], "BtnMatrix"))
             {
+                Examples(pageNum * 6 + 4);
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MainMenu";
             }
@@ -138,5 +144,49 @@ public class MainMenu : MonoBehaviour
 
         GUI.DrawTexture(new Rect(pager_first.xMin + texture_width * 0.05f * 2 * pageNum, pager_first.yMin, pager_first.width, pager_first.height), pagerTexture[1], ScaleMode.StretchToFill);
 
+    }
+
+    void Examples(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                Common.matrix_size = 2;
+                Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
+                for (int i = 0; i < Common.matrix_size; i++)
+                    for (int j = 0; j < Common.matrix_size; j++)
+                        for (int k = 0; k < Common.matrix_size; k++)
+                        {
+                            Common.matrix[i, j, k] = 1;
+                        }
+                Common.matrix[0, 1, 0] = 0;
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            case 10:
+                break;
+            case 11:
+                break;
+            case 12:
+                break;
+            default:
+                break;
+        }
     }
 }

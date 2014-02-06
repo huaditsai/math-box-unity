@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MatrixMenuTwo : MonoBehaviour
 {
+    public Camera caamera;
+
     private float screen_width, screen_height;
     public GUISkin gSkin;
 
@@ -13,13 +15,14 @@ public class MatrixMenuTwo : MonoBehaviour
     public Texture[] planeTexture;
     private int planeTextureIndex = 0;
 
-    private int planeSize = 2;
-    private string planeSizeText = "2 x 2 x 2";
+    private string planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
 
     private int level = 1;
     private string levelText = "第 1 層";
 
-    private int[, ,] matrix = new int[2, 2, 2];
+    //int x = 0, y = 0, z = 0;
+    public GameObject box;
+    private GameObject cloneBox;
 
 
     public Texture[] btnGoBackTexture;
@@ -27,7 +30,23 @@ public class MatrixMenuTwo : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        for (int x = 0; x < Common.matrix_size; x++)
+            for (int y = 0; y < Common.matrix_size; y++)
+                for (int z = 0; z < Common.matrix_size; z++)
+                {
+                    if (Common.matrix[x, y, z] == 1)
+                    {
+                        if (Common.matrix_size % 2 == 0)
+                            cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + 0.5f + x, -Common.matrix_size / 2 + 0.5f + y, -Common.matrix_size / 2 + 0.5f + z), Quaternion.identity) as GameObject;
+                        else
+                            cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + x, -Common.matrix_size / 2 + y, -Common.matrix_size / 2 + z), Quaternion.identity) as GameObject;
 
+                        cloneBox.name = string.Format("{0}{1}{2}", x, y, z);
+                    }
+                }
+
+        caamera.orthographicSize = Common.matrix_size;
+        transform.LookAt(Vector3.zero);
     }
 
     // Update is called once per frame
@@ -80,28 +99,39 @@ public class MatrixMenuTwo : MonoBehaviour
             Common.lastLevel = "MatrixMenuTwo";
         }
 
-        for (int i = 1; i <= planeSize; i++)
+        //點選要的
+        for (int i = 1; i <= Common.matrix_size; i++)
         {
-            for (int j = 1; j <= planeSize; j++)
+            for (int j = 1; j <= Common.matrix_size; j++)
             {
-                if (matrix[i - 1, j - 1, level - 1] == 1)
+                if (Common.matrix[i - 1, level - 1, j - 1] == 1)
                     planeTextureIndex = 1;
                 else
                     planeTextureIndex = 0;
 
-                if (GUI.Button(new Rect(screen_width * 0.2f + (plane_width / planeSize) * (i - 1),
-                    screen_height * 0.2f + (plane_height / planeSize) * (j - 1)
-                    , plane_width / planeSize, plane_height / planeSize), planeTexture[planeTextureIndex], "Plane"))
+                if (GUI.Button(new Rect(screen_width * 0.2f + (plane_width / Common.matrix_size) * (i - 1),
+                    screen_height * 0.2f + (plane_height / Common.matrix_size) * (Common.matrix_size - j) //(0,0)要在左下
+                    , plane_width / Common.matrix_size, plane_height / Common.matrix_size), planeTexture[planeTextureIndex], "Plane"))
                 {
-                    if (matrix[i - 1, j - 1, level - 1] == 1)
+                    //print((i -1) + ", " + (j - 1));
+                    if (Common.matrix[i - 1, level - 1, j - 1] == 1)
                     {
-                        matrix[i - 1, j - 1, level - 1] = 0;
-                        planeTextureIndex = 0;
+                        Common.matrix[i - 1, level - 1, j - 1] = 0; //0不放
+                        planeTextureIndex = 0; //0白色
+
+                        Destroy(GameObject.Find(string.Format("{0}{1}{2}", i - 1, level - 1, j - 1)));
                     }
                     else
                     {
-                        matrix[i - 1, j - 1, level - 1] = 1;
-                        planeTextureIndex = 1;
+                        Common.matrix[i - 1, level - 1, j - 1] = 1; //1要放
+                        planeTextureIndex = 1; //1粉紅色
+
+                        if (Common.matrix_size % 2 == 0) //將(0,0)放在物體的中心
+                            cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + 0.5f + i - 1, -Common.matrix_size / 2 + 0.5f + level - 1, -Common.matrix_size / 2 + 0.5f + j - 1), Quaternion.identity) as GameObject;
+                        else
+                            cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + i - 1, -Common.matrix_size / 2 + level - 1, -Common.matrix_size / 2 + j - 1), Quaternion.identity) as GameObject;
+
+                        cloneBox.name = string.Format("{0}{1}{2}", i - 1, level - 1, j - 1); //為了刪除用
                     }
                 }
             }
@@ -109,7 +139,7 @@ public class MatrixMenuTwo : MonoBehaviour
         }
 
         // 層數
-        if (level < planeSize && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.25f, screen_height * 0.1f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_U"))
+        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.25f, screen_height * 0.1f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_U"))
         {
             level++;
             levelText = "第 " + level + " 層";
@@ -122,21 +152,37 @@ public class MatrixMenuTwo : MonoBehaviour
         }
 
         //方塊尺寸
-        if (planeSize > 2 && GUI.Button(new Rect(screen_width * 0.1f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_L"))
+        if (Common.matrix_size > 2 && GUI.Button(new Rect(screen_width * 0.1f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_L"))
         {
-            planeSize--;
-            planeSizeText = planeSize + " x " + planeSize + " x " + planeSize;
-            matrix = new int[planeSize, planeSize, planeSize];
+            //清空方塊
+            for (int i = 0; i < Common.matrix_size; i++)
+                for (int j = 0; j < Common.matrix_size; j++)
+                    for (int k = 0; k < Common.matrix_size; k++)
+                        Destroy(GameObject.Find(string.Format("{0}{1}{2}", i, j, k)));
+
+            Common.matrix_size--;
+            planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
+            Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
+
+            caamera.orthographicSize = Common.matrix_size; //調整鏡頭
 
             level = 1;
             levelText = "第 " + level + " 層";
         }
         GUI.Label(new Rect(screen_width * 0.2f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), planeSizeText, "BoxSize");
-        if (planeSize < 10 && GUI.Button(new Rect(screen_width * 0.3f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_R"))
+        if (Common.matrix_size < 10 && GUI.Button(new Rect(screen_width * 0.3f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_R"))
         {
-            planeSize++;
-            planeSizeText = planeSize + " x " + planeSize + " x " + planeSize;
-            matrix = new int[planeSize, planeSize, planeSize];
+            //清空方塊
+            for (int i = 0; i < Common.matrix_size; i++)
+                for (int j = 0; j < Common.matrix_size; j++)
+                    for (int k = 0; k < Common.matrix_size; k++)
+                        Destroy(GameObject.Find(string.Format("{0}{1}{2}", i, j, k)));
+
+            Common.matrix_size++;
+            planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
+            Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
+
+            caamera.orthographicSize = Common.matrix_size; //調整鏡頭
 
             level = 1;
             levelText = "第 " + level + " 層";
@@ -145,10 +191,10 @@ public class MatrixMenuTwo : MonoBehaviour
 
         if (GUI.Button(new Rect(screen_width * 0.9f - texture_width / 2, screen_height * 0.2f - texture_height / 2, texture_width, texture_height), renderTexture[0], "Render"))
         {
-            isBigRenderTexture = true;
+            isBigRenderTexture = true; //放大看
         }
 
-        if (isBigRenderTexture)
+        if (isBigRenderTexture) //放大看
         {
             GUI.DrawTexture(new Rect(screen_width * 0.8f - texture_width * 0.9f, screen_height * 0.2f - texture_height / 2, texture_width * 2f, texture_height * 2f), renderTexture[1]);
             GUI.DrawTexture(new Rect(screen_width * 0.8f - texture_width * 0.9f, screen_height * 0.2f - texture_height / 2, texture_width * 2f, texture_height * 2f), renderTexture[0]);
@@ -159,5 +205,4 @@ public class MatrixMenuTwo : MonoBehaviour
 
     }
 
- 
 }
