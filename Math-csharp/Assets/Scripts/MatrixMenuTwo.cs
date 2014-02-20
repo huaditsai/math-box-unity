@@ -11,6 +11,7 @@ public class MatrixMenuTwo : MonoBehaviour
     public Texture backgroundTexture;
     public Texture[] renderTexture; //要有兩個camera才Build成功
     private bool isBigRenderTexture = false;
+    private Rect BigRenderRect;
 
     public Texture[] planeTexture;
     private int planeTextureIndex = 0;
@@ -88,12 +89,12 @@ public class MatrixMenuTwo : MonoBehaviour
 
         GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture, ScaleMode.StretchToFill);
 
-        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width / 4, screen_height * 0.9f - texture_height / 4, texture_width / 2, texture_height / 2), btnGoBackTexture[0], "BtnGoBack"))
+        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), btnGoBackTexture[0], "BtnGoBack"))
         {
-            Application.LoadLevel("MainMenu");
+            Application.LoadLevel("MatrixMenu");
         }
 
-        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 4, screen_height * 0.9f - texture_height / 4, texture_width / 2, texture_height / 2), btnGoBackTexture[1], "BtnGoBack"))
+        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), btnGoBackTexture[1], "BtnGoBack"))
         {
             Application.LoadLevel("Main");
             Common.lastLevel = "MatrixMenuTwo";
@@ -109,29 +110,32 @@ public class MatrixMenuTwo : MonoBehaviour
                 else
                     planeTextureIndex = 0;
 
-                if (GUI.Button(new Rect(screen_width * 0.2f + (plane_width / Common.matrix_size) * (i - 1),
+                if (GUI.Button(new Rect(screen_width * 0.15f + (plane_width / Common.matrix_size) * (i - 1),
                     screen_height * 0.2f + (plane_height / Common.matrix_size) * (Common.matrix_size - j) //(0,0)要在左下
                     , plane_width / Common.matrix_size, plane_height / Common.matrix_size), planeTexture[planeTextureIndex], "Plane"))
                 {
-                    //print((i -1) + ", " + (j - 1));
-                    if (Common.matrix[i - 1, level - 1, j - 1] == 1)
+                    if (!isBigRenderTexture)
                     {
-                        Common.matrix[i - 1, level - 1, j - 1] = 0; //0不放
-                        planeTextureIndex = 0; //0白色
+                        //print((i -1) + ", " + (j - 1));
+                        if (Common.matrix[i - 1, level - 1, j - 1] == 1)
+                        {
+                            Common.matrix[i - 1, level - 1, j - 1] = 0; //0不放
+                            planeTextureIndex = 0; //0白色
 
-                        Destroy(GameObject.Find(string.Format("{0}{1}{2}", i - 1, level - 1, j - 1)));
-                    }
-                    else
-                    {
-                        Common.matrix[i - 1, level - 1, j - 1] = 1; //1要放
-                        planeTextureIndex = 1; //1粉紅色
-
-                        if (Common.matrix_size % 2 == 0) //將(0,0)放在物體的中心
-                            cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + 0.5f + i - 1, -Common.matrix_size / 2 + 0.5f + level - 1, -Common.matrix_size / 2 + 0.5f + j - 1), Quaternion.identity) as GameObject;
+                            Destroy(GameObject.Find(string.Format("{0}{1}{2}", i - 1, level - 1, j - 1)));
+                        }
                         else
-                            cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + i - 1, -Common.matrix_size / 2 + level - 1, -Common.matrix_size / 2 + j - 1), Quaternion.identity) as GameObject;
+                        {
+                            Common.matrix[i - 1, level - 1, j - 1] = 1; //1要放
+                            planeTextureIndex = 1; //1粉紅色
 
-                        cloneBox.name = string.Format("{0}{1}{2}", i - 1, level - 1, j - 1); //為了刪除用
+                            if (Common.matrix_size % 2 == 0) //將(0,0)放在物體的中心
+                                cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + 0.5f + i - 1, -Common.matrix_size / 2 + 0.5f + level - 1, -Common.matrix_size / 2 + 0.5f + j - 1), Quaternion.identity) as GameObject;
+                            else
+                                cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + i - 1, -Common.matrix_size / 2 + level - 1, -Common.matrix_size / 2 + j - 1), Quaternion.identity) as GameObject;
+
+                            cloneBox.name = string.Format("{0}{1}{2}", i - 1, level - 1, j - 1); //為了刪除用
+                        } 
                     }
                 }
             }
@@ -139,69 +143,84 @@ public class MatrixMenuTwo : MonoBehaviour
         }
 
         // 層數
-        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.25f, screen_height * 0.1f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_U"))
+        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.75f - texture_width * 0.25f, screen_height * 0.13f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_U"))
         {
-            level++;
-            levelText = "第 " + level + " 層";
+            if (!isBigRenderTexture)
+            {
+                level++;
+                levelText = "第 " + level + " 層"; 
+            }
         }
-        GUI.Label(new Rect(screen_width * 0.7f - texture_width * 0.5f, screen_height * 0.2f + plane_height / 2f - texture_height / 2, texture_width, texture_height), levelText, "Level");
-        if (level > 1 && GUI.Button(new Rect(screen_width * 0.7f - texture_width * 0.25f, screen_height * 0.3f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_D"))
+        gSkin.FindStyle("Level").fontSize = (int)(texture_height * 0.2f);
+        GUI.Label(new Rect(screen_width * 0.75f - texture_width * 0.5f, screen_height * 0.2f + plane_height / 2f - texture_height / 2, texture_width, texture_height), levelText, "Level");
+        if (level > 1 && GUI.Button(new Rect(screen_width * 0.75f - texture_width * 0.25f, screen_height * 0.27f + plane_height / 2f - texture_height * 0.125f, texture_width * 0.5f, texture_height * 0.25f), "", "Btn_D"))
         {
-            level--;
-            levelText = "第 " + level + " 層";
+            if (!isBigRenderTexture)
+            {
+                level--;
+                levelText = "第 " + level + " 層"; 
+            }
         }
 
         //方塊尺寸
-        if (Common.matrix_size > 2 && GUI.Button(new Rect(screen_width * 0.1f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_L"))
+        if (Common.matrix_size > 2 && GUI.Button(new Rect(screen_width * 0.05f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_L"))
         {
-            //清空方塊
-            for (int i = 0; i < Common.matrix_size; i++)
-                for (int j = 0; j < Common.matrix_size; j++)
-                    for (int k = 0; k < Common.matrix_size; k++)
-                        Destroy(GameObject.Find(string.Format("{0}{1}{2}", i, j, k)));
+            if (!isBigRenderTexture)
+            {
+                //清空方塊
+                for (int i = 0; i < Common.matrix_size; i++)
+                    for (int j = 0; j < Common.matrix_size; j++)
+                        for (int k = 0; k < Common.matrix_size; k++)
+                            Destroy(GameObject.Find(string.Format("{0}{1}{2}", i, j, k)));
 
-            Common.matrix_size--;
-            planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
-            Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
+                Common.matrix_size--;
+                planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
+                Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
 
-            caamera.orthographicSize = Common.matrix_size; //調整鏡頭
+                caamera.orthographicSize = Common.matrix_size; //調整鏡頭
 
-            level = 1;
-            levelText = "第 " + level + " 層";
+                level = 1;
+                levelText = "第 " + level + " 層"; 
+            }
         }
-        GUI.Label(new Rect(screen_width * 0.2f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), planeSizeText, "BoxSize");
-        if (Common.matrix_size < 10 && GUI.Button(new Rect(screen_width * 0.3f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_R"))
+        gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
+        GUI.Label(new Rect(screen_width * 0.15f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), planeSizeText, "BoxSize");
+        if (Common.matrix_size < 3 && GUI.Button(new Rect(screen_width * 0.25f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_R"))
         {
-            //清空方塊
-            for (int i = 0; i < Common.matrix_size; i++)
-                for (int j = 0; j < Common.matrix_size; j++)
-                    for (int k = 0; k < Common.matrix_size; k++)
-                        Destroy(GameObject.Find(string.Format("{0}{1}{2}", i, j, k)));
+            if (!isBigRenderTexture)
+            {
+                //清空方塊
+                for (int i = 0; i < Common.matrix_size; i++)
+                    for (int j = 0; j < Common.matrix_size; j++)
+                        for (int k = 0; k < Common.matrix_size; k++)
+                            Destroy(GameObject.Find(string.Format("{0}{1}{2}", i, j, k)));
 
-            Common.matrix_size++;
-            planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
-            Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
+                Common.matrix_size++;
+                planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
+                Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
 
-            caamera.orthographicSize = Common.matrix_size; //調整鏡頭
+                caamera.orthographicSize = Common.matrix_size; //調整鏡頭
 
-            level = 1;
-            levelText = "第 " + level + " 層";
+                level = 1;
+                levelText = "第 " + level + " 層"; 
+            }
         }
 
 
-        if (GUI.Button(new Rect(screen_width * 0.9f - texture_width / 2, screen_height * 0.2f - texture_height / 2, texture_width, texture_height), renderTexture[0], "Render"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width / 2, screen_height * 0.2f - texture_height / 2, texture_width, texture_height), renderTexture[0], "Render"))
         {
             isBigRenderTexture = true; //放大看
         }
 
+        BigRenderRect = new Rect(screen_width * 0.75f - texture_width * 0.9f, screen_height * 0.2f - texture_height * 0.5f, texture_width * 2f, texture_height * 2f);   
         if (isBigRenderTexture) //放大看
         {
-            GUI.DrawTexture(new Rect(screen_width * 0.8f - texture_width * 0.9f, screen_height * 0.2f - texture_height / 2, texture_width * 2f, texture_height * 2f), renderTexture[1]);
-            GUI.DrawTexture(new Rect(screen_width * 0.8f - texture_width * 0.9f, screen_height * 0.2f - texture_height / 2, texture_width * 2f, texture_height * 2f), renderTexture[0]);
-        }
+            GUI.DrawTexture(new Rect(BigRenderRect), renderTexture[1]);
+            GUI.DrawTexture(new Rect(BigRenderRect), renderTexture[0]);
 
-        if (Input.anyKeyDown)
-            isBigRenderTexture = false;
+            if (!BigRenderRect.Contains(new Vector3(Input.mousePosition.x, screen_height - Input.mousePosition.y, Input.mousePosition.z)))
+                isBigRenderTexture = false;
+        }
 
     }
 

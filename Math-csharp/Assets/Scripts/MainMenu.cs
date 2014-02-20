@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
     public GUISkin gSkin;
 
     public Texture backgroundTexture;
+    public Texture TitleTexture;
 
     public Texture[] BookSampleTexture;
     public int pageNum = 0;
@@ -20,7 +21,7 @@ public class MainMenu : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        Common.init();
     }
 
     // Update is called once per frame
@@ -54,11 +55,16 @@ public class MainMenu : MonoBehaviour
             texture_height = screen_height * scale;
         }
 
-        GUI.Label(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.15f - texture_height / 2, texture_width, texture_height), "選擇課本範例", "Title");
+        //Title
+        //gSkin.FindStyle("Title").fontSize = (int)(texture_height * 0.3f);
+        //GUI.Label(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.15f - texture_height / 2, texture_width, texture_height), "選擇課本範例", "Title");
+        GUI.DrawTexture(new Rect(screen_width * 0.5f - texture_width * 1.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 2.5f, texture_height * 0.5f), TitleTexture, ScaleMode.StretchToFill);
 
+        //變化組合
+        gSkin.FindStyle("BtnMatrix").fontSize = (int)(texture_height * 0.3f);
         if (pageNum == 0 && GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), "變化\n組合", "BtnMatrix"))
         {
-            Application.LoadLevel("MatrixMenuTwo");
+            Application.LoadLevel("MatrixMenu");
         }
 
         if (pageNum != 0 && pageNum * 6 - 1 < BookSampleTexture.Length)

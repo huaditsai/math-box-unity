@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
-using UnityEditor;
+using System.Runtime.InteropServices;
 
 public class AddBox : MonoBehaviour
 {
@@ -9,6 +9,8 @@ public class AddBox : MonoBehaviour
     public GameObject box;
 
     //public GameObject plane;
+
+
 
     // Use this for initialization
     void Start()
@@ -73,6 +75,7 @@ public class AddBox : MonoBehaviour
     public Material[] materials;
 
     private float screen_width, screen_height;
+
     void OnGUI()
     {
         if (gSkin)
@@ -105,8 +108,8 @@ public class AddBox : MonoBehaviour
         GUI.DrawTexture(new Rect(screen_width * 0.35f - texture_width * scale * 0.5f, screen_height * 0.45f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[0]);
 
         //旋轉
-        rotateZ = GUI.HorizontalSlider(new Rect(screen_width * 0.35f - texture_width * scale * 0.5f, screen_height * 0.9f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.03f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
-        rotateY = GUI.VerticalSlider(new Rect(screen_width * 0.6f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.45f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
+        rotateZ = GUI.HorizontalSlider(new Rect(screen_width * 0.35f - texture_width * scale * 0.5f, screen_height * 0.86f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.03f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
+        rotateY = GUI.VerticalSlider(new Rect(screen_width * 0.66f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.45f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
         caamera.transform.position = new Vector3(
             7 * Mathf.Sin(rotateY) * Mathf.Cos(rotateZ),
             7 * Mathf.Cos(rotateY),
@@ -114,24 +117,47 @@ public class AddBox : MonoBehaviour
         caamera.transform.LookAt(Vector3.zero);
 
         //回上頁
-        scale = 0.15f;
-        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.9f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
+        scale = 0.13f;
+        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
         {
             Application.LoadLevel(Common.lastLevel); //變化組合回到編輯, 範例回到範例選擇
         }
 
         //設定
-        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.9f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnSettingTexture[0], "BtnGoBack"))
+        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnSettingTexture[0], "BtnGoBack"))
         {
             isShowSetting = !isShowSetting;
         }
+
+        //顯示數量
+        if (isShowCount)
+        {
+            scale = 0.7f;
+            gSkin.FindStyle("Count").fontSize = (int)(texture_height * scale * 0.23f);
+            GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), count + " 個", "Count");
+        }
+
+        scale = 0.15f;
         if (isShowSetting)
         {
             gSkin.FindStyle("Settings").fontSize = (int)(texture_height * scale * 0.2f);
 
-            if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
+            if (GUI.Button(new Rect(screen_width * 0.93f - texture_width * scale * 0.5f, screen_height * 0.53f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
             {
-                var path = EditorUtility.SaveFilePanel("Save", "", "", "jpg");
+                string path = "";
+                if (Application.platform == RuntimePlatform.WindowsPlayer)
+                {
+                    //1. Copy ".\Program Files (x86)\Unity\Editor\Data\Mono\lib\mono\2.0\System.Windows.Forms.dll"
+                    //To Assets\Plugins 2. Change player setting ".NET 2.0 Subset" To ".NET 2.0"
+                    System.Windows.Forms.SaveFileDialog saveLog = new System.Windows.Forms.SaveFileDialog();
+                    saveLog.InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+                    saveLog.Filter = "Image Files(*.JPG;*.BMP;*.PNG)|*.JPG;*.BMP;*.PNG|All files (*.*)|*.*";
+                    System.Windows.Forms.DialogResult result = saveLog.ShowDialog();
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                        path = saveLog.FileName;
+                }
+                else
+                    path = Application.persistentDataPath + "/SavedScreen.jpg";
 
                 if (path.Length != 0)
                 {
@@ -151,8 +177,9 @@ public class AddBox : MonoBehaviour
 
                     isShowSetting = false;
                 }
+
             }
-            if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.6f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings"))
+            if (GUI.Button(new Rect(screen_width * 0.93f - texture_width * scale * 0.5f, screen_height * 0.63f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings"))
             {
                 count = 0;
                 if (!isShowCount)
@@ -170,7 +197,7 @@ public class AddBox : MonoBehaviour
                 isShowSetting = false;
                 isShowCount = !isShowCount;
             }
-            if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
+            if (GUI.Button(new Rect(screen_width * 0.93f - texture_width * scale * 0.5f, screen_height * 0.73f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
             {
                 if (!isHideLine) //隱藏
                 {
@@ -188,7 +215,7 @@ public class AddBox : MonoBehaviour
                 isShowSetting = false;
                 isHideLine = !isHideLine;
             }
-            if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
+            if (GUI.Button(new Rect(screen_width * 0.93f - texture_width * scale * 0.5f, screen_height * 0.83f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
             {
                 Common.init();
                 isShowSetting = false;
@@ -196,34 +223,28 @@ public class AddBox : MonoBehaviour
             }
         }
 
-        //顯示數量
-        if (isShowCount)
-        {
-            scale = 0.5f;
-            gSkin.FindStyle("Count").fontSize = (int)(texture_height * scale * 0.27f);
-            GUI.Label(new Rect(screen_width * 0.8f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), count + " 個", "Count");
-        }
+
 
 
         //縮放按鈕
         scale = 0.06f;
-        if (GUI.Button(new Rect(screen_width * 0.48f - texture_width * scale * 0.5f, screen_height * 0.75f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.54f - texture_width * scale * 0.5f, screen_height * 0.75f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
         {
             if (caamera.orthographicSize < 10f)
                 caamera.orthographicSize += 0.1f;
         }
-        if (GUI.Button(new Rect(screen_width * 0.52f - texture_width * scale * 0.5f, screen_height * 0.75f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.58f - texture_width * scale * 0.5f, screen_height * 0.75f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
         {
             if (caamera.orthographicSize > 0.5f)
                 caamera.orthographicSize -= 0.1f;
         }
 
         //標題        
-        scale = 0.5f;
+        scale = 0.4f;
         gSkin.FindStyle("Title").fontSize = (int)(texture_height * scale * 0.27f);
-        GUI.Label(new Rect(screen_width * 0.8f - texture_width * scale * 0.5f, screen_height * 0.35f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "數一數", "Title");
+        GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.27f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "數一數", "Title");
         gSkin.FindStyle("SubTitle").fontSize = (int)(texture_height * scale * 0.18f);
-        GUI.Label(new Rect(screen_width * 0.8f - texture_width * scale * 0.5f, screen_height * 0.37f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "有幾個？", "SubTitle");
+        GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.27f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "有幾個？", "SubTitle");
 
     }
 

@@ -52,6 +52,9 @@
      <Compile Include="Assets\Scripts\MatrixMenu.cs" />
      <Compile Include="Assets\Scripts\MatrixMenuTwo.cs" />
      <Compile Include="Assets\Scripts\Splash.cs" />
+ <Reference Include="System.Windows.Forms">
+ <HintPath>Assets\Plugins\System.Windows.Forms.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
