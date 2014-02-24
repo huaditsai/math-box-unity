@@ -123,7 +123,7 @@ public class AddBox : MonoBehaviour
     private string countText = "觀看數量";
     private bool isShowCount = false;
     private int count = 0;
-    
+
     private int zoomPercent = 100;
     private bool isZoom = false;
     private float zoomTo = 0;
@@ -168,7 +168,7 @@ public class AddBox : MonoBehaviour
         //旋轉
         gSkin.FindStyle("horizontalsliderthumb").overflow = new RectOffset(0, 0, (int)(texture_height * scale * 0.02f), -(int)(texture_height * scale * 0.05f));
         rotateZ = GUI.HorizontalSlider(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.91f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.1f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
-        rotateY = GUI.VerticalSlider(new Rect(screen_width * 0.71f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
+        rotateY = GUI.VerticalSlider(new Rect(screen_width * 0.66f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
         caamera.transform.position = new Vector3(
            cameraLook.x + 7 * Mathf.Sin(rotateY) * Mathf.Cos(rotateZ),
            cameraLook.y + 7 * Mathf.Cos(rotateY),
@@ -177,32 +177,42 @@ public class AddBox : MonoBehaviour
 
         //縮放按鈕
         scale = 0.06f;
-        if (GUI.Button(new Rect(screen_width * 0.53f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.49f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
         {
-            if (caamera.orthographicSize < 10f)
-            {
-                //caamera.orthographicSize += 0.1f;
-                zoomTo = caamera.orthographicSize + 0.2f;
+            zoomTo = caamera.orthographicSize + 0.2f;
+            if (zoomTo < 10f)
                 isZoom = true;
-                zoomPercent = 100 - (int)((caamera.orthographicSize - Common.matrix_size) / (10f - Common.matrix_size) * 100f);
-            }
+            else
+                zoomTo = 10f;
+
+            if (zoomTo > Common.matrix_size)
+                zoomPercent = 100 - (int)((zoomTo - Common.matrix_size) / (10f - Common.matrix_size) * 100f);
+            else if (zoomTo < Common.matrix_size)
+                zoomPercent = 100 + (int)((Common.matrix_size - zoomTo) / (Common.matrix_size - 0.5f) * 100f);
+            else
+                zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.58f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
+        if (GUI.Button(new Rect(screen_width * 0.54f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
         {
             //caamera.orthographicSize = Common.matrix_size;
             zoomTo = Common.matrix_size;
             isZoom = true;
             zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.63f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.59f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
         {
-            if (caamera.orthographicSize > 0.5f)
-            {
-                //caamera.orthographicSize -= 0.1f;
-                zoomTo = caamera.orthographicSize - 0.2f;
-                isZoom = true;
-                zoomPercent = 100 - (int)((caamera.orthographicSize - Common.matrix_size) / (Common.matrix_size - 0.5f) * 100f);
-            }
+            zoomTo = caamera.orthographicSize - 0.2f;
+            if (zoomTo > 0.5f)           
+                isZoom = true;            
+            else
+                zoomTo = 0.5f;
+
+            if (zoomTo > Common.matrix_size)
+                zoomPercent = 100 - (int)((zoomTo - Common.matrix_size) / (10f - Common.matrix_size) * 100f);
+            else if (zoomTo < Common.matrix_size)
+                zoomPercent = 100 + (int)((Common.matrix_size - zoomTo) / (Common.matrix_size - 0.5f) * 100f);
+            else
+                zoomPercent = 100;
         }
 
         //回上頁

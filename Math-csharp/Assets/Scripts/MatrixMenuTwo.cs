@@ -155,7 +155,7 @@ public class MatrixMenuTwo : MonoBehaviour
 
 
         // 層數
-        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.78f - texture_width * 0.2f, screen_height * 0.13f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_U"))
+        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.68f - texture_width * 0.2f, screen_height * 0.13f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_U"))
         {
             if (!isBigRenderTexture)
             {
@@ -164,8 +164,8 @@ public class MatrixMenuTwo : MonoBehaviour
             }
         }
         gSkin.FindStyle("Level").fontSize = (int)(texture_height * 0.2f);
-        GUI.Label(new Rect(screen_width * 0.78f - texture_width * 0.5f, screen_height * 0.2f + plane_height / 2f - texture_height / 2, texture_width, texture_height), levelText, "Level");
-        if (level > 1 && GUI.Button(new Rect(screen_width * 0.78f - texture_width * 0.2f, screen_height * 0.27f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_D"))
+        GUI.Label(new Rect(screen_width * 0.68f - texture_width * 0.5f, screen_height * 0.2f + plane_height / 2f - texture_height / 2, texture_width, texture_height), levelText, "Level");
+        if (level > 1 && GUI.Button(new Rect(screen_width * 0.68f - texture_width * 0.2f, screen_height * 0.27f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_D"))
         {
             if (!isBigRenderTexture)
             {
