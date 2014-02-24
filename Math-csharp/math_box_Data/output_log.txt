@@ -13,115 +13,86 @@ Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\Assembl
 Loading D:\Documents\Unity Project\Math\math_box_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\System.Windows.Forms.dll (this message is harmless)
 Loading D:\Documents\Unity Project\Math\math_box_Data\Managed\System.Windows.Forms.dll into Unity Child Domain
-- Completed reload, in  0.048 seconds
+- Completed reload, in  0.049 seconds
 <RI> Initializing input.
 <RI> Input initialized.
 desktop: 1680x1050 59Hz; virtual: 2960x1050 at 0,0
-UnloadTime: 0.239786 ms
+UnloadTime: 0.279284 ms
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
-Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 134.
-Total: 0.522181 ms (FindLiveObjects: 0.006220 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.150216 ms  DeleteObjects: 0.007464 ms)
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 137.
+Total: 0.570698 ms (FindLiveObjects: 0.008708 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.151149 ms  DeleteObjects: 0.009019 ms)
 
-UnloadTime: 0.241652 ms
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+HandleD3DDeviceLost
+  HandleD3DDeviceLost: needs reset, doing it
+FullResetD3DDevice
+ResetD3DDevice
+dev->Reset
+D3Dwindow device not lost anymore
+UnloadTime: 0.266533 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
-Unloading 29 unused Assets to reduce memory usage. Loaded Objects now: 119.
-Total: 0.497923 ms (FindLiveObjects: 0.005598 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.117871 ms  DeleteObjects: 0.027679 ms)
-
-UnloadTime: 0.223614 ms
-Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 181.
-Total: 0.526224 ms (FindLiveObjects: 0.007153 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.152082 ms  DeleteObjects: 0.013995 ms)
-
-UnloadTime: 0.315983 ms
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 184.
-Total: 0.562612 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.178207 ms  DeleteObjects: 0.018971 ms)
+Unloading 19 unused Assets to reduce memory usage. Loaded Objects now: 163.
+Total: 0.589670 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.007153 ms MarkObjects: 0.163589 ms  DeleteObjects: 0.021459 ms)
 
 Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\System.dll (this message is harmless)
-Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\System.Drawing.dll (this message is harmless)
-Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\Accessibility.dll (this message is harmless)
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libc
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/.\libc
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libc
-Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\Mono.Posix.dll (this message is harmless)
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libc
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/.\libc
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libc
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/.\libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/.\libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/.\libX11
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/libX11
-Platform assembly: D:\Documents\Unity Project\Math\math_box_Data\Managed\System.Xml.dll (this message is harmless)
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/.\/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/lib/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/.\lib/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon
-Fallback handler could not load library D:/Documents/Unity Project/Math/math_box_Data/Mono/lib/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon
-UnloadTime: 0.311629 ms
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 15 unused Assets to reduce memory usage. Loaded Objects now: 140.
-Total: 0.804265 ms (FindLiveObjects: 0.006220 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.427635 ms  DeleteObjects: 0.026124 ms)
-
-UnloadTime: 0.199666 ms
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 140.
-Total: 1.416639 ms (FindLiveObjects: 0.005287 ms CreateObjectMapping: 0.008397 ms MarkObjects: 0.406797 ms  DeleteObjects: 0.648761 ms)
-
-UnloadTime: 0.228590 ms
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 29 unused Assets to reduce memory usage. Loaded Objects now: 123.
-Total: 0.741442 ms (FindLiveObjects: 0.005909 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.352682 ms  DeleteObjects: 0.031722 ms)
-
-UnloadTime: 0.207442 ms
+UnloadTime: 0.326868 ms
 Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
-Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 182.
-Total: 0.799600 ms (FindLiveObjects: 0.007153 ms CreateObjectMapping: 0.008708 ms MarkObjects: 0.406797 ms  DeleteObjects: 0.014306 ms)
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 157.
+Total: 0.563856 ms (FindLiveObjects: 0.006842 ms CreateObjectMapping: 0.008397 ms MarkObjects: 0.159857 ms  DeleteObjects: 0.027368 ms)
 
-UnloadTime: 0.210552 ms
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 135.
-Total: 0.783117 ms (FindLiveObjects: 0.006220 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.391869 ms  DeleteObjects: 0.017105 ms)
-
-UnloadTime: 0.198111 ms
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 182.
-Total: 0.793380 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.008086 ms MarkObjects: 0.408974 ms  DeleteObjects: 0.015550 ms)
-
-UnloadTime: 0.379118 ms
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 184.
-Total: 0.896634 ms (FindLiveObjects: 0.006842 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.467755 ms  DeleteObjects: 0.013684 ms)
-
-UnloadTime: 0.260624 ms
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 15 unused Assets to reduce memory usage. Loaded Objects now: 139.
-Total: 0.785294 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.404931 ms  DeleteObjects: 0.026435 ms)
-
-UnloadTime: 0.191891 ms
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
-
-Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 140.
-Total: 1.448984 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.007153 ms MarkObjects: 0.400266 ms  DeleteObjects: 0.687637 ms)
-
-UnloadTime: 0.229523 ms
+UnloadTime: 0.241652 ms
 Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
-Unloading 20 unused Assets to reduce memory usage. Loaded Objects now: 185.
-Total: 0.823859 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.007153 ms MarkObjects: 0.413640 ms  DeleteObjects: 0.029856 ms)
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 165.
+Total: 0.582206 ms (FindLiveObjects: 0.006220 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.164522 ms  DeleteObjects: 0.019904 ms)
+
+UnloadTime: 0.357036 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 157.
+Total: 0.588737 ms (FindLiveObjects: 0.006220 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.182561 ms  DeleteObjects: 0.028301 ms)
+
+UnloadTime: 0.185360 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 131.
+Total: 0.549550 ms (FindLiveObjects: 0.005909 ms CreateObjectMapping: 0.006842 ms MarkObjects: 0.154570 ms  DeleteObjects: 0.034210 ms)
+
+UnloadTime: 0.227035 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 19 unused Assets to reduce memory usage. Loaded Objects now: 180.
+Total: 1.227235 ms (FindLiveObjects: 0.007464 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.157680 ms  DeleteObjects: 0.680795 ms)
+
+UnloadTime: 0.301055 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 12 unused Assets to reduce memory usage. Loaded Objects now: 130.
+Total: 0.553904 ms (FindLiveObjects: 0.006531 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.165767 ms  DeleteObjects: 0.020215 ms)
+
+UnloadTime: 0.233255 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 180.
+Total: 0.629168 ms (FindLiveObjects: 0.007153 ms CreateObjectMapping: 0.035765 ms MarkObjects: 0.206820 ms  DeleteObjects: 0.015239 ms)
+
+UnloadTime: 0.311007 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 160.
+Total: 0.570698 ms (FindLiveObjects: 0.006842 ms CreateObjectMapping: 0.006220 ms MarkObjects: 0.179451 ms  DeleteObjects: 0.013995 ms)
+
+UnloadTime: 0.281772 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 197.
+Total: 0.569143 ms (FindLiveObjects: 0.007464 ms CreateObjectMapping: 0.007153 ms MarkObjects: 0.180695 ms  DeleteObjects: 0.018038 ms)
+
+UnloadTime: 0.294835 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 28 unused Assets to reduce memory usage. Loaded Objects now: 130.
+Total: 1.294724 ms (FindLiveObjects: 0.006220 ms CreateObjectMapping: 0.006531 ms MarkObjects: 0.185671 ms  DeleteObjects: 0.735221 ms)
 

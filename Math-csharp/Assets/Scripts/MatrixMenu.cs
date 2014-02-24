@@ -19,7 +19,8 @@ public class MatrixMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKey(KeyCode.Escape))
+            Screen.fullScreen = false;
     }
 
     void OnGUI()
@@ -51,14 +52,14 @@ public class MatrixMenu : MonoBehaviour
         for (int j = 1; j <= 3; j++)
             for (int i = 1; i <= 3; i++)
             {
-                if (GUI.Button(new Rect(screen_width * ((screen_width - texture_width * 3f) / 3f / screen_width) + screen_width * ((screen_width - texture_width * 3f) / 8f / screen_width) * i + texture_width * (i - 1),
+                if (GUI.Button(new Rect(screen_width * ((screen_width - texture_width * 3f) / 4f / screen_width) + screen_width * ((screen_width - texture_width * 3f) / 8f / screen_width) * i + texture_width * (i - 1),
                     screen_height * ((screen_height - texture_height * 3f) / 3f / screen_height) + screen_height * ((screen_height - texture_height * 3f) / 8f / screen_height) * j + texture_height * (j - 1)
-                    , texture_width * 0.8f, texture_height * 0.8f), matrixTexture[matrix_size - 2], "BtnMatrix"))
+                    , texture_width, texture_height), matrixTexture[matrix_size - 2], "BtnMatrix"))
                 {
-                    //print(matrix_index);
+                    //print(matrix_size);
                     //GameObject planeClone = Instantiate(plane[matrix_index], Vector3.zero, Quaternion.identity) as GameObject;
 
-                    Common.matrix_size = matrix_size;
+                    Common.SetMatrix(matrix_size);
                     Application.LoadLevel("MatrixMenuTwo");
 
                 }
@@ -66,9 +67,9 @@ public class MatrixMenu : MonoBehaviour
                 matrix_size++;
             }
 
-        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), btnGoBackTexture[0], "BtnPage"))
-        {
-            Application.LoadLevel("MainMenu");
-        }
+        //if (GUI.Button(new Rect(screen_width * 0.05f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), btnGoBackTexture[0], "BtnPage"))
+        //{
+        //    Application.LoadLevel("MainMenu");
+        //}
     }
 }
