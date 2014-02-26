@@ -64,6 +64,11 @@ public class MatrixMenu : MonoBehaviour
 
                 }
 
+                gSkin.FindStyle("Size").fontSize = (int)(texture_height * 0.2f);
+                GUI.Label(new Rect(screen_width * ((screen_width - texture_width * 3f) / 4f / screen_width) + screen_width * ((screen_width - texture_width * 3f) / 8f / screen_width) * i + texture_width * (i - 1),
+                    screen_height * ((screen_height - texture_height * 4f) / 4f / screen_height) + screen_height * ((screen_height - texture_height * 3f) / 8f / screen_height) * j + texture_height * (j - 1)
+                    , texture_width, texture_height), string.Format("{0}x{0}x{0}", matrix_size), "Size");
+
                 matrix_size++;
             }
 

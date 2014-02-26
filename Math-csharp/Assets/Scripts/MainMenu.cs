@@ -69,23 +69,26 @@ public class MainMenu : MonoBehaviour
         if (exampleNxt > BookSampleTexture.Length - 1)
             exampleNxt = 0;
 
-        if (GUI.Button(new Rect(-texture_width / 2, screen_height * 0.5f - texture_height / 2, texture_width, texture_height), BookSampleTexture[examplePre], style[examplePre]))
+        gSkin.FindStyle("Title").fontSize = (int)(texture_height * 0.1f);
+        if (GUI.Button(new Rect(-texture_width * 0.7f, screen_height * 0.5f - texture_height * 0.7f, texture_width * 1.4f, texture_height * 1.4f), BookSampleTexture[examplePre], style[examplePre]))
         {
             if (examplePre == 0 || examplePre == 1 || examplePre == 2)
                 Examples(examplePre);
-        }
-
-        if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.5f - texture_height / 2, texture_width, texture_height), BookSampleTexture[exampleCur], style[exampleCur]))
+        }        
+        
+        if (GUI.Button(new Rect(screen_width * 0.5f - texture_width * 0.7f, screen_height * 0.5f - texture_height * 0.7f, texture_width * 1.4f, texture_height * 1.4f), BookSampleTexture[exampleCur], style[exampleCur]))
         {
             if (exampleCur == 0 || exampleCur == 1 || exampleCur == 2)
                 Examples(exampleCur);
         }
+        GUI.Label(new Rect(screen_width * 0.304f - texture_width * 0.6f, screen_height * 0.242f - texture_height * 0.7f, texture_width * 1.2f, texture_height * 1.2f), (exampleCur + 1).ToString(), "Title");
 
-        if (GUI.Button(new Rect(screen_width - texture_width / 2, screen_height * 0.5f - texture_height / 2, texture_width, texture_height), BookSampleTexture[exampleNxt], style[exampleNxt]))
+        if (GUI.Button(new Rect(screen_width - texture_width * 0.7f, screen_height * 0.5f - texture_height * 0.7f, texture_width * 1.4f, texture_height * 1.4f), BookSampleTexture[exampleNxt], style[exampleNxt]))
         {
             if (exampleNxt == 0 || exampleNxt == 1 || exampleNxt == 2)
                 Examples(exampleNxt);
         }
+        GUI.Label(new Rect(screen_width * 0.804f - texture_width * 0.6f, screen_height * 0.24f - texture_height * 0.7f, texture_width * 1.2f, texture_height * 1.2f), (exampleNxt + 1).ToString(), "Title");
 
         //變化組合
         gSkin.FindStyle("BtnChange").fontSize = (int)(texture_height * scale * 0.27f);

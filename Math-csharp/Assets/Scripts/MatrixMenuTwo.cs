@@ -16,7 +16,7 @@ public class MatrixMenuTwo : MonoBehaviour
     public Texture[] planeTexture;
     private int planeTextureIndex = 0;
 
-    //private string planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
+    private string planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
 
     private int level = 1;
     private string levelText = "第 1 層";
@@ -97,11 +97,19 @@ public class MatrixMenuTwo : MonoBehaviour
         }
 
         if (isCanGo)
+        {
             if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), btnGoBackTexture[1], "BtnGoBack"))
             {
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MatrixMenuTwo";
             }
+
+            gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
+            GUI.Label(new Rect(screen_width * 0.83f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), "確認成型", "BoxSize");
+        }
+
+        gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
+        GUI.Label(new Rect(screen_width * 0.15f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.08f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), "請點選要出現的方格", "BoxSize");
 
         //點選要的
         GUI.DrawTexture(new Rect(screen_width * 0.15f - plane_width * 0.03f, screen_height * 0.2f - plane_height * 0.03f, plane_width * 1.06f, plane_height * 1.06f), planeTexture[2], ScaleMode.StretchToFill);
@@ -195,8 +203,8 @@ public class MatrixMenuTwo : MonoBehaviour
         //        levelText = "第 " + level + " 層"; 
         //    }
         //}
-        //gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
-        //GUI.Label(new Rect(screen_width * 0.15f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), planeSizeText, "BoxSize");
+        gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
+        GUI.Label(new Rect(screen_width * 0.15f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), planeSizeText, "BoxSize");
         //if (Common.matrix_size < 3 && GUI.Button(new Rect(screen_width * 0.25f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_R"))
         //{
         //    if (!isBigRenderTexture)
@@ -208,7 +216,7 @@ public class MatrixMenuTwo : MonoBehaviour
         //                    Destroy(GameObject.Find(string.Format("{0}{1}{2}", i, j, k)));
 
         //        Common.matrix_size++;
-        //        planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
+        planeSizeText = Common.matrix_size + " x " + Common.matrix_size + " x " + Common.matrix_size;
         //        Common.matrix = new int[Common.matrix_size, Common.matrix_size, Common.matrix_size];
 
         //        caamera.orthographicSize = Common.matrix_size; //調整鏡頭

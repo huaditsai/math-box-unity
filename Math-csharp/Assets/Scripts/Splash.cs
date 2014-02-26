@@ -10,7 +10,7 @@ public class Splash : MonoBehaviour
     private int index = 0;
     public GUISkin gSkin;
 
-    //float time = 1f;
+    float time = 5f;
 
     // Use this for initialization
     void Start()
@@ -21,12 +21,16 @@ public class Splash : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //time -= Time.fixedDeltaTime;
+        //
         if (Input.anyKeyDown)
-            Application.LoadLevel("MainMenu");        
+            Application.LoadLevel("MainMenu");
     }
     void FixedUpdate()
     {
+        time -= Time.fixedDeltaTime;
+        if(time <= 0)
+            Application.LoadLevel("MainMenu");
+
         index++;
         if (index > 1)
             index = 0;

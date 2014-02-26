@@ -112,6 +112,7 @@ public class AddBox : MonoBehaviour
 
     public Texture backgroundTexture;
     public Texture titleTexture;
+    public Texture rotateTexture;
 
     public GUISkin gSkin;
     public Texture[] btnGoBackTexture;
@@ -175,6 +176,9 @@ public class AddBox : MonoBehaviour
            cameraLook.z - 7 * Mathf.Sin(rotateY) * Mathf.Sin(rotateZ));
         caamera.transform.LookAt(cameraLook);
 
+        scale = 0.1f;
+        GUI.DrawTexture(new Rect(screen_width * 0.59f + texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), rotateTexture, ScaleMode.ScaleAndCrop);
+
         //縮放按鈕
         scale = 0.06f;
         if (GUI.Button(new Rect(screen_width * 0.49f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
@@ -192,18 +196,18 @@ public class AddBox : MonoBehaviour
             else
                 zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.54f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
+        if (GUI.Button(new Rect(screen_width * 0.545f - texture_width * scale * 0.9f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale * 1.8f, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
         {
             //caamera.orthographicSize = Common.matrix_size;
             zoomTo = Common.matrix_size;
             isZoom = true;
             zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.59f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.6f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
         {
             zoomTo = caamera.orthographicSize - 0.2f;
-            if (zoomTo > 0.5f)           
-                isZoom = true;            
+            if (zoomTo > 0.5f)
+                isZoom = true;
             else
                 zoomTo = 0.5f;
 
@@ -237,13 +241,13 @@ public class AddBox : MonoBehaviour
         //    GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), count + " 個", "Count");
         //}
 
-        scale = 0.25f;
+        scale = 0.35f;
         //if (isShowSetting)
         //{
         gSkin.FindStyle("Settings").fontSize = (int)(texture_height * scale * 0.2f);
-        gSkin.FindStyle("Settings").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.1f));
+        gSkin.FindStyle("Settings").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
 
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.51f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.3f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
         {
             string path = "";
             if (Application.platform == RuntimePlatform.WindowsPlayer)
@@ -280,7 +284,19 @@ public class AddBox : MonoBehaviour
             }
 
         }
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.64f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings"))
+
+        
+        if (!isShowCount)
+        {
+            gSkin.FindStyle("Settings2").fontSize = (int)(texture_height * scale * 0.2f);
+            gSkin.FindStyle("Settings2").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+        }
+        else
+        {
+            gSkin.FindStyle("Settings2").fontSize = (int)(texture_height * scale * 0.4f);
+            gSkin.FindStyle("Settings2").contentOffset = new Vector2(0, 0);
+        }
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
         {
             count = 0;
             if (!isShowCount)
@@ -299,7 +315,7 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isShowCount = !isShowCount;
         }
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.77f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
         {
             if (!isHideLine) //隱藏
             {
@@ -326,10 +342,10 @@ public class AddBox : MonoBehaviour
         //}        
 
         //標題        
-        scale = 0.4f;
+        //scale = 0.4f;
         //gSkin.FindStyle("Title").fontSize = (int)(texture_height * scale * 0.2f);
         //GUI.Label(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.25f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "數一數，\n有幾個？", "Title");
-        GUI.DrawTexture(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.23f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), titleTexture, ScaleMode.StretchToFill);
+        //GUI.DrawTexture(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.23f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), titleTexture, ScaleMode.StretchToFill);
         //gSkin.FindStyle("SubTitle").fontSize = (int)(texture_height * scale * 0.18f);
         //GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.27f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "有幾個？", "SubTitle");
 
