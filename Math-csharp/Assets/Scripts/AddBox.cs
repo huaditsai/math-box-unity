@@ -161,15 +161,15 @@ public class AddBox : MonoBehaviour
         GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture, ScaleMode.StretchToFill);
 
         //主要
-        scale = 0.71f;
-        GUI.DrawTexture(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[1]);
-        scale = 0.68f;
-        GUI.DrawTexture(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[0]);
+        scale = 0.83f;
+        GUI.DrawTexture(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[1]);
+        scale = 0.8f;
+        GUI.DrawTexture(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[0]);
 
         //旋轉
         gSkin.FindStyle("horizontalsliderthumb").overflow = new RectOffset(0, 0, (int)(texture_height * scale * 0.02f), -(int)(texture_height * scale * 0.05f));
-        rotateZ = GUI.HorizontalSlider(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.91f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.1f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
-        rotateY = GUI.VerticalSlider(new Rect(screen_width * 0.66f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
+        rotateZ = GUI.HorizontalSlider(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.95f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.1f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
+        rotateY = GUI.VerticalSlider(new Rect(screen_width * 0.71f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
         caamera.transform.position = new Vector3(
            cameraLook.x + 7 * Mathf.Sin(rotateY) * Mathf.Cos(rotateZ),
            cameraLook.y + 7 * Mathf.Cos(rotateY),
@@ -177,11 +177,11 @@ public class AddBox : MonoBehaviour
         caamera.transform.LookAt(cameraLook);
 
         scale = 0.1f;
-        GUI.DrawTexture(new Rect(screen_width * 0.59f + texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), rotateTexture, ScaleMode.ScaleAndCrop);
+        GUI.DrawTexture(new Rect(screen_width * 0.63f + texture_width * scale * 0.5f, screen_height * 0.91f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), rotateTexture, ScaleMode.ScaleAndCrop);
 
         //縮放按鈕
         scale = 0.06f;
-        if (GUI.Button(new Rect(screen_width * 0.49f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.52f - texture_width * scale * 0.5f, screen_height * 0.83f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
         {
             zoomTo = caamera.orthographicSize + 0.2f;
             if (zoomTo < 10f)
@@ -196,14 +196,14 @@ public class AddBox : MonoBehaviour
             else
                 zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.545f - texture_width * scale * 0.9f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale * 1.8f, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
+        if (GUI.Button(new Rect(screen_width * 0.575f - texture_width * scale * 0.9f, screen_height * 0.83f - texture_height * scale * 0.5f, texture_width * scale * 1.8f, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
         {
             //caamera.orthographicSize = Common.matrix_size;
             zoomTo = Common.matrix_size;
             isZoom = true;
             zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.6f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.63f - texture_width * scale * 0.5f, screen_height * 0.83f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
         {
             zoomTo = caamera.orthographicSize - 0.2f;
             if (zoomTo > 0.5f)
@@ -246,8 +246,8 @@ public class AddBox : MonoBehaviour
         //{
         gSkin.FindStyle("Settings").fontSize = (int)(texture_height * scale * 0.2f);
         gSkin.FindStyle("Settings").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
-
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.3f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
+        //設定們
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.28f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
         {
             string path = "";
             if (Application.platform == RuntimePlatform.WindowsPlayer)
@@ -296,7 +296,7 @@ public class AddBox : MonoBehaviour
             gSkin.FindStyle("Settings2").fontSize = (int)(texture_height * scale * 0.4f);
             gSkin.FindStyle("Settings2").contentOffset = new Vector2(0, 0);
         }
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.48f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
         {
             count = 0;
             if (!isShowCount)
@@ -315,7 +315,7 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isShowCount = !isShowCount;
         }
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.68f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
         {
             if (!isHideLine) //隱藏
             {
@@ -333,7 +333,7 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isHideLine = !isHideLine;
         }
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.9f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
         {
             Common.init();
             //isShowSetting = false;

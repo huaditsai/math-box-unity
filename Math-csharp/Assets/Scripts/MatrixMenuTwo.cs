@@ -9,6 +9,8 @@ public class MatrixMenuTwo : MonoBehaviour
     public GUISkin gSkin;
 
     public Texture backgroundTexture;
+    public Texture titleTexture;
+
     public Texture[] renderTexture; //要有兩個camera才Build成功
     private bool isBigRenderTexture = false;
     private Rect BigRenderRect;
@@ -96,7 +98,7 @@ public class MatrixMenuTwo : MonoBehaviour
             Application.LoadLevel("MatrixMenu");
         }
 
-        if (isCanGo)
+        if (isCanGo) //確認成形
         {
             if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), btnGoBackTexture[1], "BtnGoBack"))
             {
@@ -104,15 +106,17 @@ public class MatrixMenuTwo : MonoBehaviour
                 Common.lastLevel = "MatrixMenuTwo";
             }
 
-            gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
-            GUI.Label(new Rect(screen_width * 0.83f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), "確認成型", "BoxSize");
+            gSkin.FindStyle("OkGO").fontSize = (int)(texture_height * 0.2f);
+            GUI.Label(new Rect(screen_width * 0.83f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), "確認成型", "OkGO");
         }
 
-        gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
-        GUI.Label(new Rect(screen_width * 0.15f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.08f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), "請點選要出現的方格", "BoxSize");
+        //Title
+        //gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
+        //GUI.Label(new Rect(screen_width * 0.15f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.08f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), "請點選要出現的方格", "BoxSize");
+        GUI.DrawTexture(new Rect(screen_width * 0.4f - plane_width * 0.45f, screen_height * 0.07f - plane_height * 0.06f, plane_width * 0.9f, plane_height * 0.12f), titleTexture, ScaleMode.StretchToFill);
 
         //點選要的
-        GUI.DrawTexture(new Rect(screen_width * 0.15f - plane_width * 0.03f, screen_height * 0.2f - plane_height * 0.03f, plane_width * 1.06f, plane_height * 1.06f), planeTexture[2], ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(screen_width * 0.15f - plane_width * 0.095f, screen_height * 0.15f - plane_height * 0.05f, plane_width * 1.28f, plane_height * 1.28f), planeTexture[2], ScaleMode.StretchToFill);
         for (int i = 1; i <= Common.matrix_size; i++)
         {
             for (int j = 1; j <= Common.matrix_size; j++)
@@ -122,9 +126,9 @@ public class MatrixMenuTwo : MonoBehaviour
                 else
                     planeTextureIndex = 0;
 
-                if (GUI.Button(new Rect(screen_width * 0.15f + (plane_width / Common.matrix_size) * (i - 1),
-                    screen_height * 0.2f + (plane_height / Common.matrix_size) * (Common.matrix_size - j) //(0,0)要在左下
-                    , plane_width / Common.matrix_size, plane_height / Common.matrix_size), planeTexture[planeTextureIndex], "Plane"))
+                if (GUI.Button(new Rect(screen_width * 0.15f + (plane_width * 1.1f / Common.matrix_size) * (i - 1),
+                    screen_height * 0.12f + (plane_height * 1.1f / Common.matrix_size) * (Common.matrix_size - j) //(0,0)要在左下
+                    , plane_width * 1.1f / Common.matrix_size, plane_height * 1.1f / Common.matrix_size), planeTexture[planeTextureIndex], "Plane"))
                 {
                     if (!isBigRenderTexture)
                     {
@@ -163,7 +167,7 @@ public class MatrixMenuTwo : MonoBehaviour
 
 
         // 層數
-        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.68f - texture_width * 0.2f, screen_height * 0.13f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_U"))
+        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.73f - texture_width * 0.2f, screen_height * 0.09f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_U"))
         {
             if (!isBigRenderTexture)
             {
@@ -172,8 +176,8 @@ public class MatrixMenuTwo : MonoBehaviour
             }
         }
         gSkin.FindStyle("Level").fontSize = (int)(texture_height * 0.2f);
-        GUI.Label(new Rect(screen_width * 0.68f - texture_width * 0.5f, screen_height * 0.2f + plane_height / 2f - texture_height / 2, texture_width, texture_height), levelText, "Level");
-        if (level > 1 && GUI.Button(new Rect(screen_width * 0.68f - texture_width * 0.2f, screen_height * 0.27f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_D"))
+        GUI.Label(new Rect(screen_width * 0.73f - texture_width * 0.5f, screen_height * 0.16f + plane_height / 2f - texture_height / 2, texture_width, texture_height), levelText, "Level");
+        if (level > 1 && GUI.Button(new Rect(screen_width * 0.73f - texture_width * 0.2f, screen_height * 0.23f + plane_height / 2f - texture_height * 0.2f, texture_width * 0.4f, texture_height * 0.4f), "", "Btn_D"))
         {
             if (!isBigRenderTexture)
             {
@@ -204,7 +208,7 @@ public class MatrixMenuTwo : MonoBehaviour
         //    }
         //}
         gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * 0.2f);
-        GUI.Label(new Rect(screen_width * 0.15f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), planeSizeText, "BoxSize");
+        GUI.Label(new Rect(screen_width * 0.17f + plane_width / 2 - texture_width * 0.25f, screen_height * 0.925f - texture_height * 0.25f, texture_width * 0.5f, texture_height * 0.5f), planeSizeText, "BoxSize");
         //if (Common.matrix_size < 3 && GUI.Button(new Rect(screen_width * 0.25f + plane_width / 2 - texture_width * 0.125f, screen_height * 0.15f - texture_height * 0.125f, texture_width * 0.25f, texture_height * 0.25f), "", "Btn_R"))
         //{
         //    if (!isBigRenderTexture)
