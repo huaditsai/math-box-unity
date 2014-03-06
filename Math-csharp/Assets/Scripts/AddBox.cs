@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Runtime.InteropServices;
+using System;
 
 public class AddBox : MonoBehaviour
 {
@@ -107,10 +108,19 @@ public class AddBox : MonoBehaviour
 
     }
 
+    void FixedUpdate()
+    {
+        index++;
+        if (index > 1)
+            index = 0;
+    }
+
     private float rotateY = Mathf.PI / 3;
     private float rotateZ = 2 * Mathf.PI / 3;
 
-    public Texture backgroundTexture;
+    public Texture[] backgroundTexture;
+    private int index = 0;
+
     public Texture titleTexture;
     public Texture rotateTexture;
 
@@ -119,6 +129,10 @@ public class AddBox : MonoBehaviour
     public Texture[] zoomTexture;
     public Texture[] btnSettingTexture;
     public Texture[] renderTexture; //要有兩個camera才Build成功
+
+    public Texture saveWindowTexture;
+    public Texture saveWindowBackTexture;
+    private bool isSaveDialog = false;
 
     //private bool isShowSetting = false;
     private string countText = "觀看數量";
@@ -134,18 +148,17 @@ public class AddBox : MonoBehaviour
     public Material[] materials;
 
     private float screen_width, screen_height;
+    float texture_width;
+    float texture_height;
+    float scale = 0.3f;
 
     void OnGUI()
     {
         if (gSkin)
-            GUI.skin = gSkin;
+            GUI.skin = gSkin;        
 
         screen_width = Screen.width;
-        screen_height = Screen.height;
-
-        float texture_width;
-        float texture_height;
-        float scale = 0.3f;
+        screen_height = Screen.height;        
 
         if (screen_width < screen_height)
         {
@@ -158,17 +171,17 @@ public class AddBox : MonoBehaviour
             texture_height = screen_height;
         }
 
-        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture, ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture[index], ScaleMode.StretchToFill);
 
         //主要
-        scale = 0.83f;
-        GUI.DrawTexture(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[1]);
-        scale = 0.8f;
-        GUI.DrawTexture(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[0]);
+        scale = 0.75f;
+        GUI.DrawTexture(new Rect(screen_width * 0.38f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[1]);
+        scale = 0.72f;
+        GUI.DrawTexture(new Rect(screen_width * 0.38f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTexture[0]);
 
         //旋轉
         gSkin.FindStyle("horizontalsliderthumb").overflow = new RectOffset(0, 0, (int)(texture_height * scale * 0.02f), -(int)(texture_height * scale * 0.05f));
-        rotateZ = GUI.HorizontalSlider(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.95f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.1f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
+        rotateZ = GUI.HorizontalSlider(new Rect(screen_width * 0.38f - texture_width * scale * 0.5f, screen_height * 0.91f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.1f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
         rotateY = GUI.VerticalSlider(new Rect(screen_width * 0.71f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
         caamera.transform.position = new Vector3(
            cameraLook.x + 7 * Mathf.Sin(rotateY) * Mathf.Cos(rotateZ),
@@ -176,12 +189,12 @@ public class AddBox : MonoBehaviour
            cameraLook.z - 7 * Mathf.Sin(rotateY) * Mathf.Sin(rotateZ));
         caamera.transform.LookAt(cameraLook);
 
-        scale = 0.1f;
-        GUI.DrawTexture(new Rect(screen_width * 0.63f + texture_width * scale * 0.5f, screen_height * 0.91f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), rotateTexture, ScaleMode.ScaleAndCrop);
+        scale = 0.08f;
+        GUI.DrawTexture(new Rect(screen_width * 0.63f + texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), rotateTexture, ScaleMode.ScaleAndCrop);
 
         //縮放按鈕
         scale = 0.06f;
-        if (GUI.Button(new Rect(screen_width * 0.52f - texture_width * scale * 0.5f, screen_height * 0.83f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.51f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
         {
             zoomTo = caamera.orthographicSize + 0.2f;
             if (zoomTo < 10f)
@@ -196,14 +209,14 @@ public class AddBox : MonoBehaviour
             else
                 zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.575f - texture_width * scale * 0.9f, screen_height * 0.83f - texture_height * scale * 0.5f, texture_width * scale * 1.8f, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
+        if (GUI.Button(new Rect(screen_width * 0.57f - texture_width * scale * 0.9f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale * 1.8f, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
         {
             //caamera.orthographicSize = Common.matrix_size;
             zoomTo = Common.matrix_size;
             isZoom = true;
             zoomPercent = 100;
         }
-        if (GUI.Button(new Rect(screen_width * 0.63f - texture_width * scale * 0.5f, screen_height * 0.83f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
+        if (GUI.Button(new Rect(screen_width * 0.63f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
         {
             zoomTo = caamera.orthographicSize - 0.2f;
             if (zoomTo > 0.5f)
@@ -220,12 +233,18 @@ public class AddBox : MonoBehaviour
         }
 
         //回上頁
-        scale = 0.13f;
+        scale = 0.11f;
         if (Common.lastLevel == "MatrixMenuTwo")
             if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
             {
                 Application.LoadLevel("MatrixMenuTwo"); //變化組合回到編輯, 範例回到範例選擇
             }
+
+        scale = 0.12f;
+        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.07f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "", "BtnGoExit"))
+        {
+            Application.Quit(); //變化組合回到編輯, 範例回到範例選擇
+        }
 
         ////設定
         //if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnSettingTexture[0], "BtnGoBack"))
@@ -241,47 +260,49 @@ public class AddBox : MonoBehaviour
         //    GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), count + " 個", "Count");
         //}
 
-        scale = 0.35f;
+        scale = 0.27f;
         //if (isShowSetting)
         //{
         gSkin.FindStyle("Settings").fontSize = (int)(texture_height * scale * 0.2f);
         gSkin.FindStyle("Settings").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
         //設定們
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.28f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.23f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
         {
-            string path = "";
-            if (Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                //1. Copy ".\Program Files (x86)\Unity\Editor\Data\Mono\lib\mono\2.0\System.Windows.Forms.dll"
-                //To Assets\Plugins 2. Change player setting ".NET 2.0 Subset" To ".NET 2.0"
-                System.Windows.Forms.SaveFileDialog saveLog = new System.Windows.Forms.SaveFileDialog();
-                saveLog.InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-                saveLog.Filter = "Image Files(*.JPG)|*.jpg;*|All files (*.*)|*.*";
-                System.Windows.Forms.DialogResult result = saveLog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                    path = saveLog.FileName;
-            }
-            else
-                path = Application.persistentDataPath + "/SavedScreen.jpg";
+            isSaveDialog = true;
 
-            if (path.Length != 0)
-            {
-                RenderTexture mainRender = renderTexture[0] as RenderTexture;
-                Texture2D myTexture2D = new Texture2D(mainRender.width, mainRender.height);
-                RenderTexture.active = mainRender;
-                myTexture2D.ReadPixels(new Rect(0, 0, mainRender.width, mainRender.height), 0, 0);
-                myTexture2D.Apply();
+            //string path = "";
+            //if (Application.platform == RuntimePlatform.WindowsPlayer)
+            //{
+            //    //1. Copy ".\Program Files (x86)\Unity\Editor\Data\Mono\lib\mono\2.0\System.Windows.Forms.dll"
+            //    //To Assets\Plugins 2. Change player setting ".NET 2.0 Subset" To ".NET 2.0"
+            //    System.Windows.Forms.SaveFileDialog saveLog = new System.Windows.Forms.SaveFileDialog();
+            //    saveLog.InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+            //    saveLog.Filter = "Image Files(*.JPG)|*.jpg;*|All files (*.*)|*.*";
+            //    System.Windows.Forms.DialogResult result = saveLog.ShowDialog();
+            //    if (result == System.Windows.Forms.DialogResult.OK)
+            //        path = saveLog.FileName;
+            //}
+            //else
+            //    path = Application.persistentDataPath + "/SavedScreen.jpg";
 
-                //var bytes = myTexture2D.EncodeToPNG();
-                //var file = File.Open(Application.persistentDataPath + "/SavedScreen.jpg", FileMode.Create);
-                //var binary = new BinaryWriter(file);
-                //binary.Write(bytes);
-                //file.Close();
+            //if (path.Length != 0)
+            //{
+            //    RenderTexture mainRender = renderTexture[0] as RenderTexture;
+            //    Texture2D myTexture2D = new Texture2D(mainRender.width, mainRender.height);
+            //    RenderTexture.active = mainRender;
+            //    myTexture2D.ReadPixels(new Rect(0, 0, mainRender.width, mainRender.height), 0, 0);
+            //    myTexture2D.Apply();
 
-                File.WriteAllBytes(path, myTexture2D.EncodeToPNG());
+            //    //var bytes = myTexture2D.EncodeToPNG();
+            //    //var file = File.Open(Application.persistentDataPath + "/SavedScreen.jpg", FileMode.Create);
+            //    //var binary = new BinaryWriter(file);
+            //    //binary.Write(bytes);
+            //    //file.Close();
 
-                //isShowSetting = false;
-            }
+            //    File.WriteAllBytes(path, myTexture2D.EncodeToPNG());
+
+            //    //isShowSetting = false;
+            //}
 
         }
 
@@ -296,7 +317,7 @@ public class AddBox : MonoBehaviour
             gSkin.FindStyle("Settings2").fontSize = (int)(texture_height * scale * 0.4f);
             gSkin.FindStyle("Settings2").contentOffset = new Vector2(0, 0);
         }
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.48f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.445f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
         {
             count = 0;
             if (!isShowCount)
@@ -315,7 +336,7 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isShowCount = !isShowCount;
         }
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.68f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
+        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.66f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
         {
             if (!isHideLine) //隱藏
             {
@@ -349,6 +370,69 @@ public class AddBox : MonoBehaviour
         //gSkin.FindStyle("SubTitle").fontSize = (int)(texture_height * scale * 0.18f);
         //GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.27f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "有幾個？", "SubTitle");
 
+        if (isSaveDialog)
+        {
+            GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), saveWindowBackTexture, ScaleMode.StretchToFill);
+            scale = 0.7f;
+            GUI.ModalWindow(0, new Rect(screen_width * 0.5f - texture_width * scale * 1.2f * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale * 1.2f, texture_height * scale), SaveWindow, "");
+        }
+        
+    }
+
+    bool isSaveOK = false;
+    private void SaveWindow(int id)
+    {        
+        scale = 0.35f;
+
+        if (!isSaveOK)
+        {
+            string path = "";
+
+            if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.23f - texture_height * scale * 0.2f * 0.5f, texture_width * scale, texture_height * scale * 0.2f), "", "SaveDeskTop"))
+            {
+                path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+            }
+            if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.33f - texture_height * scale * 0.2f * 0.5f, texture_width * scale, texture_height * scale * 0.2f), "", "SaveMyDoc"))
+            {
+                path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+            }
+            if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.43f - texture_height * scale * 0.2f * 0.5f, texture_width * scale, texture_height * scale * 0.2f), "", "SaveMyPic"))
+            {
+                path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+            }
+
+            if (path.Length != 0)
+            {
+                RenderTexture mainRender = renderTexture[0] as RenderTexture;
+                Texture2D myTexture2D = new Texture2D(mainRender.width, mainRender.height);
+                RenderTexture.active = mainRender;
+                myTexture2D.ReadPixels(new Rect(0, 0, mainRender.width, mainRender.height), 0, 0);
+                myTexture2D.Apply();
+
+                File.WriteAllBytes(path, myTexture2D.EncodeToPNG());
+                isSaveOK = true;
+            }
+                        
+
+            scale = 0.25f;
+            if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.57f - texture_height * scale * 0.3f * 0.5f, texture_width * scale, texture_height * scale * 0.3f), "", "SaveCancle"))
+            {
+                isSaveDialog = false;
+            }
+        }
+
+        if (isSaveOK)
+        {
+            scale = 0.2f;
+            if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.33f - texture_height * scale * 0.15f * 0.5f, texture_width * scale, texture_height * scale * 0.15f), "", "SaveOK"))
+            { }
+
+            if (Input.anyKeyDown)
+            {
+                isSaveOK = false;
+                isSaveDialog = false;
+            }
+        }
     }
 
 

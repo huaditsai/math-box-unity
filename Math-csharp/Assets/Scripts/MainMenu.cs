@@ -8,7 +8,9 @@ public class MainMenu : MonoBehaviour
     public GUISkin gSkin;
     private string[] style = new string[] { "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO" };
 
-    public Texture backgroundTexture;
+    public Texture[] backgroundTexture;
+    private int index = 0;
+
     public Texture TitleTexture;
 
     public Texture[] BookSampleTexture;
@@ -36,6 +38,17 @@ public class MainMenu : MonoBehaviour
             Screen.fullScreen = false;
     }
 
+    void FixedUpdate()
+    {
+        index++;
+        if (index > 1)
+            index = 0;
+    }
+
+    float  texture_width;
+    float  texture_height;
+    float scale = 0.5f;
+
     void OnGUI()
     {
         if (gSkin)
@@ -44,21 +57,18 @@ public class MainMenu : MonoBehaviour
         screen_width = Screen.width;
         screen_height = Screen.height;
 
-        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture, ScaleMode.StretchToFill);
-
-        float texture_width;
-        float texture_height;
-        float scale = 0.5f;
+        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture[index], ScaleMode.StretchToFill);
+        
 
         if (screen_width < screen_height)
         {
-            texture_width = screen_width * scale;
-            texture_height = screen_width * scale;
+             texture_width= screen_width;
+             texture_height = screen_width;
         }
         else
         {
-            texture_width = screen_height * scale;
-            texture_height = screen_height * scale;
+             texture_width = screen_height;
+             texture_height = screen_height;
         }
 
         examplePre = exampleCur - 1;
@@ -69,42 +79,47 @@ public class MainMenu : MonoBehaviour
         if (exampleNxt > BookSampleTexture.Length - 1)
             exampleNxt = 0;
 
-        gSkin.FindStyle("Title").fontSize = (int)(texture_height * 0.1f);
-        if (GUI.Button(new Rect(-texture_width * 0.7f, screen_height * 0.5f - texture_height * 0.7f, texture_width * 1.4f, texture_height * 1.4f), BookSampleTexture[examplePre], style[examplePre]))
+        scale = 0.4f;
+        gSkin.FindStyle("Title").fontSize = (int)( texture_height * scale * 0.1f);
+        gSkin.FindStyle(style[examplePre]).contentOffset = new Vector2(0, -texture_height * scale * 0.1f);
+        if (GUI.Button(new Rect(- texture_width * scale * 0.7f, screen_height * 0.5f -  texture_height * scale * 0.7f,  texture_width * scale * 1.4f,  texture_height * scale * 1.4f), BookSampleTexture[examplePre], style[examplePre]))
         {
             if (examplePre == 0 || examplePre == 1 || examplePre == 2)
                 Examples(examplePre);
-        }        
-        
-        if (GUI.Button(new Rect(screen_width * 0.5f - texture_width * 0.7f, screen_height * 0.5f - texture_height * 0.7f, texture_width * 1.4f, texture_height * 1.4f), BookSampleTexture[exampleCur], style[exampleCur]))
+        }
+        gSkin.FindStyle(style[exampleCur]).contentOffset = new Vector2(0, -texture_height * scale * 0.1f);
+        if (GUI.Button(new Rect(screen_width * 0.5f -  texture_width * scale * 0.7f, screen_height * 0.5f -  texture_height * scale * 0.7f,  texture_width * scale * 1.4f,  texture_height * scale * 1.4f), BookSampleTexture[exampleCur], style[exampleCur]))
         {
             if (exampleCur == 0 || exampleCur == 1 || exampleCur == 2)
                 Examples(exampleCur);
         }
-        GUI.Label(new Rect(screen_width * 0.304f - texture_width * 0.6f, screen_height * 0.242f - texture_height * 0.7f, texture_width * 1.2f, texture_height * 1.2f), (exampleCur + 1).ToString(), "Title");
+        GUI.Label(new Rect(screen_width * 0.308f -  texture_width * scale * 0.6f, screen_height * 0.29f -  texture_height * scale * 0.7f,  texture_width * scale * 1.2f,  texture_height * scale * 1.2f), (exampleCur + 1).ToString(), "Title");
 
-        if (GUI.Button(new Rect(screen_width - texture_width * 0.7f, screen_height * 0.5f - texture_height * 0.7f, texture_width * 1.4f, texture_height * 1.4f), BookSampleTexture[exampleNxt], style[exampleNxt]))
+        gSkin.FindStyle(style[exampleNxt]).contentOffset = new Vector2(0, -texture_height * scale * 0.1f);
+        if (GUI.Button(new Rect(screen_width -  texture_width * scale * 0.7f, screen_height * 0.5f -  texture_height * scale * 0.7f,  texture_width * scale * 1.4f,  texture_height * scale * 1.4f), BookSampleTexture[exampleNxt], style[exampleNxt]))
         {
             if (exampleNxt == 0 || exampleNxt == 1 || exampleNxt == 2)
                 Examples(exampleNxt);
         }
-        GUI.Label(new Rect(screen_width * 0.804f - texture_width * 0.6f, screen_height * 0.24f - texture_height * 0.7f, texture_width * 1.2f, texture_height * 1.2f), (exampleNxt + 1).ToString(), "Title");
+        GUI.Label(new Rect(screen_width * 0.808f -  texture_width * scale * 0.6f, screen_height * 0.29f -  texture_height * scale * 0.7f,  texture_width * scale * 1.2f,  texture_height * scale * 1.2f), (exampleNxt + 1).ToString(), "Title");
 
         //變化組合
-        gSkin.FindStyle("BtnChange").fontSize = (int)(texture_height * scale * 0.27f);
-        if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.9f - texture_height * 0.125f, texture_width, texture_height * 0.25f), "", "BtnChange"))
+        scale = 0.5f;
+        gSkin.FindStyle("BtnChange").fontSize = (int)( texture_height * scale * scale * 0.27f);
+        if (GUI.Button(new Rect(screen_width * 0.5f -  texture_width * scale / 2, screen_height * 0.93f -  texture_height * scale * 0.125f,  texture_width * scale,  texture_height * scale * 0.25f), "", "BtnChange"))
         {
             Application.LoadLevel("MatrixMenu");
         }
 
+        scale = 0.11f;
         //換頁
-        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width / 0.5f * 0.13f * 0.5f, screen_height * 0.9f - texture_height / 0.5f * 0.13f * 0.5f, texture_width / 0.5f * 0.13f, texture_height / 0.5f * 0.13f), btnTexture[0], "BtnPage"))
+        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnTexture[0], "BtnPage"))
         {
             exampleCur--;
             if (exampleCur < 0)
                 exampleCur = BookSampleTexture.Length - 1;
         }
-        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 0.5f * 0.13f * 0.5f, screen_height * 0.9f - texture_height / 0.5f * 0.13f * 0.5f, texture_width / 0.5f * 0.13f, texture_height / 0.5f * 0.13f), btnTexture[1], "BtnPage"))
+        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnTexture[1], "BtnPage"))
         {
             exampleCur++;
             if (exampleCur > BookSampleTexture.Length - 1)
@@ -112,19 +127,19 @@ public class MainMenu : MonoBehaviour
         }
 
         ////Title
-        ////gSkin.FindStyle("Title").fontSize = (int)(texture_height * 0.3f);
-        ////GUI.Label(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.15f - texture_height / 2, texture_width, texture_height), "選擇課本範例", "Title");
-        //GUI.DrawTexture(new Rect(screen_width * 0.5f - texture_width * 1.25f, screen_height * 0.15f - texture_height * 0.25f, texture_width * 2.5f, texture_height * 0.5f), TitleTexture, ScaleMode.StretchToFill);
+        ////gSkin.FindStyle("Title").fontSize = (int)( texture_height * scale * 0.3f);
+        ////GUI.Label(new Rect(screen_width * 0.5f -  texture_width * scale / 2, screen_height * 0.15f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), "選擇課本範例", "Title");
+        //GUI.DrawTexture(new Rect(screen_width * 0.5f -  texture_width * scale * 1.25f, screen_height * 0.15f -  texture_height * scale * 0.25f,  texture_width * scale * 2.5f,  texture_height * scale * 0.5f), TitleTexture, ScaleMode.StretchToFill);
 
         ////變化組合
-        //gSkin.FindStyle("BtnMatrix").fontSize = (int)(texture_height * 0.3f);
-        //if (pageNum == 0 && GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), "變化\n組合", "BtnMatrix"))
+        //gSkin.FindStyle("BtnMatrix").fontSize = (int)( texture_height * scale * 0.3f);
+        //if (pageNum == 0 && GUI.Button(new Rect(screen_width * 0.3f -  texture_width * scale / 2, screen_height * 0.4f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), "變化\n組合", "BtnMatrix"))
         //{
         //    Application.LoadLevel("MatrixMenu");
         //}
 
         //if (pageNum != 0 && pageNum * 6 - 1 < BookSampleTexture.Length)
-        //    if (GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 - 1], "BtnMatrix"))
+        //    if (GUI.Button(new Rect(screen_width * 0.3f -  texture_width * scale / 2, screen_height * 0.4f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), BookSampleTexture[pageNum * 6 - 1], "BtnMatrix"))
         //    {
         //        Examples(pageNum * 6 - 1);
         //        Application.LoadLevel("Main");
@@ -132,35 +147,35 @@ public class MainMenu : MonoBehaviour
         //    }
 
         //if (pageNum * 6 + 0 < BookSampleTexture.Length)
-        //    if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 0], "BtnMatrix"))
+        //    if (GUI.Button(new Rect(screen_width * 0.5f -  texture_width * scale / 2, screen_height * 0.4f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), BookSampleTexture[pageNum * 6 + 0], "BtnMatrix"))
         //    {
         //        Examples(pageNum * 6 + 0);
         //        Application.LoadLevel("Main");
         //        Common.lastLevel = "MainMenu";
         //    }
         //if (pageNum * 6 + 1 < BookSampleTexture.Length)
-        //    if (GUI.Button(new Rect(screen_width * 0.7f - texture_width / 2, screen_height * 0.4f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 1], "BtnMatrix"))
+        //    if (GUI.Button(new Rect(screen_width * 0.7f -  texture_width * scale / 2, screen_height * 0.4f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), BookSampleTexture[pageNum * 6 + 1], "BtnMatrix"))
         //    {
         //        Examples(pageNum * 6 + 1);
         //        Application.LoadLevel("Main");
         //        Common.lastLevel = "MainMenu";
         //    }
         //if (pageNum * 6 + 2 < BookSampleTexture.Length)
-        //    if (GUI.Button(new Rect(screen_width * 0.3f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 2], "BtnMatrix"))
+        //    if (GUI.Button(new Rect(screen_width * 0.3f -  texture_width * scale / 2, screen_height * 0.7f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), BookSampleTexture[pageNum * 6 + 2], "BtnMatrix"))
         //    {
         //        Examples(pageNum * 6 + 2);
         //        Application.LoadLevel("Main");
         //        Common.lastLevel = "MainMenu";
         //    }
         //if (pageNum * 6 + 3 < BookSampleTexture.Length)
-        //    if (GUI.Button(new Rect(screen_width * 0.5f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 3], "BtnMatrix"))
+        //    if (GUI.Button(new Rect(screen_width * 0.5f -  texture_width * scale / 2, screen_height * 0.7f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), BookSampleTexture[pageNum * 6 + 3], "BtnMatrix"))
         //    {
         //        Examples(pageNum * 6 + 3);
         //        Application.LoadLevel("Main");
         //        Common.lastLevel = "MainMenu";
         //    }
         //if (pageNum * 6 + 4 < BookSampleTexture.Length)
-        //    if (GUI.Button(new Rect(screen_width * 0.7f - texture_width / 2, screen_height * 0.7f - texture_height / 2, texture_width, texture_height), BookSampleTexture[pageNum * 6 + 4], "BtnMatrix"))
+        //    if (GUI.Button(new Rect(screen_width * 0.7f -  texture_width * scale / 2, screen_height * 0.7f -  texture_height * scale / 2,  texture_width * scale,  texture_height * scale), BookSampleTexture[pageNum * 6 + 4], "BtnMatrix"))
         //    {
         //        Examples(pageNum * 6 + 4);
         //        Application.LoadLevel("Main");
@@ -169,13 +184,13 @@ public class MainMenu : MonoBehaviour
 
         ////換頁
         //if (pageNum > 0)
-        //    if (GUI.Button(new Rect(screen_width * 0.1f - texture_width * 0.375f, screen_height * 0.55f - texture_height * 0.375f, texture_width * 0.75f, texture_height * 0.75f), btnTexture[0], "BtnPage"))
+        //    if (GUI.Button(new Rect(screen_width * 0.1f -  texture_width * scale * 0.375f, screen_height * 0.55f -  texture_height * scale * 0.375f,  texture_width * scale * 0.75f,  texture_height * scale * 0.75f), btnTexture[0], "BtnPage"))
         //    {
         //        pageNum--;
         //    }
 
         //if (pageNum + 1 < totalPage)
-        //    if (GUI.Button(new Rect(screen_width * 0.9f - texture_width * 0.375f, screen_height * 0.55f - texture_height * 0.375f, texture_width * 0.75f, texture_height * 0.75f), btnTexture[1], "BtnPage"))
+        //    if (GUI.Button(new Rect(screen_width * 0.9f -  texture_width * scale * 0.375f, screen_height * 0.55f -  texture_height * scale * 0.375f,  texture_width * scale * 0.75f,  texture_height * scale * 0.75f), btnTexture[1], "BtnPage"))
         //    {
         //        pageNum++;
         //    }
@@ -189,23 +204,23 @@ public class MainMenu : MonoBehaviour
         //{
         //    for (int i = 1; i <= totalPage / 2; i++)
         //    {
-        //        pager_first = new Rect(screen_width * 0.5f - texture_width * 0.05f - texture_width * 0.05f * 2 * i, screen_height * 0.9f - texture_height * 0.05f, texture_width * 0.1f, texture_height * 0.1f);
+        //        pager_first = new Rect(screen_width * 0.5f -  texture_width * scale * 0.05f -  texture_width * scale * 0.05f * 2 * i, screen_height * 0.9f -  texture_height * scale * 0.05f,  texture_width * scale * 0.1f,  texture_height * scale * 0.1f);
         //        GUI.DrawTexture(pager_first, pagerTexture[0], ScaleMode.StretchToFill);
-        //        GUI.DrawTexture(new Rect(screen_width * 0.5f - texture_width * 0.05f + texture_width * 0.05f * 2 * i, screen_height * 0.9f - texture_height * 0.05f, texture_width * 0.1f, texture_height * 0.1f), pagerTexture[0], ScaleMode.StretchToFill);
+        //        GUI.DrawTexture(new Rect(screen_width * 0.5f -  texture_width * scale * 0.05f +  texture_width * scale * 0.05f * 2 * i, screen_height * 0.9f -  texture_height * scale * 0.05f,  texture_width * scale * 0.1f,  texture_height * scale * 0.1f), pagerTexture[0], ScaleMode.StretchToFill);
         //    }
-        //    GUI.DrawTexture(new Rect(screen_width * 0.5f - texture_width * 0.05f, screen_height * 0.9f - texture_height * 0.05f, texture_width * 0.1f, texture_height * 0.1f), pagerTexture[0], ScaleMode.StretchToFill);
+        //    GUI.DrawTexture(new Rect(screen_width * 0.5f -  texture_width * scale * 0.05f, screen_height * 0.9f -  texture_height * scale * 0.05f,  texture_width * scale * 0.1f,  texture_height * scale * 0.1f), pagerTexture[0], ScaleMode.StretchToFill);
         //}
         //else
         //{
         //    for (int i = 0; i < totalPage / 2; i++)
         //    {
-        //        pager_first = new Rect(screen_width * 0.5f - texture_width * 0.05f - texture_width * 0.05f - texture_width * 0.05f * 2 * i, screen_height * 0.9f - texture_height * 0.05f, texture_width * 0.1f, texture_height * 0.1f);
+        //        pager_first = new Rect(screen_width * 0.5f -  texture_width * scale * 0.05f -  texture_width * scale * 0.05f -  texture_width * scale * 0.05f * 2 * i, screen_height * 0.9f -  texture_height * scale * 0.05f,  texture_width * scale * 0.1f,  texture_height * scale * 0.1f);
         //        GUI.DrawTexture(pager_first, pagerTexture[0], ScaleMode.StretchToFill);
-        //        GUI.DrawTexture(new Rect(screen_width * 0.5f - texture_width * 0.05f + texture_width * 0.05f + texture_width * 0.05f * 2 * i, screen_height * 0.9f - texture_height * 0.05f, texture_width * 0.1f, texture_height * 0.1f), pagerTexture[0], ScaleMode.StretchToFill);
+        //        GUI.DrawTexture(new Rect(screen_width * 0.5f -  texture_width * scale * 0.05f +  texture_width * scale * 0.05f +  texture_width * scale * 0.05f * 2 * i, screen_height * 0.9f -  texture_height * scale * 0.05f,  texture_width * scale * 0.1f,  texture_height * scale * 0.1f), pagerTexture[0], ScaleMode.StretchToFill);
         //    }
         //}
         ////目前頁數
-        //GUI.DrawTexture(new Rect(pager_first.xMin + texture_width * 0.05f * 2 * pageNum, pager_first.yMin, pager_first.width, pager_first.height), pagerTexture[1], ScaleMode.StretchToFill);
+        //GUI.DrawTexture(new Rect(pager_first.xMin +  texture_width * scale * 0.05f * 2 * pageNum, pager_first.yMin, pager_first.width, pager_first.height), pagerTexture[1], ScaleMode.StretchToFill);
 
     }
 

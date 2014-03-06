@@ -7,33 +7,39 @@ public class Splash : MonoBehaviour
 
     public Texture[] splashBackgroundTexture;
     public Texture[] btnGoBackTexture;
-    private int index = 0;
+
+    public MovieTexture splashMovie;
+
+    //private int index = 0;
     public GUISkin gSkin;
 
-    float time = 5f;
+    //float time = 2f;
 
     // Use this for initialization
     void Start()
     {
-        Screen.SetResolution(800, 500, false);
+        Screen.SetResolution(800, 600, true);
+
+        splashMovie.Play();
     }
 
     // Update is called once per frame
     void Update()
     {
         //
-        if (Input.anyKeyDown)
-            Application.LoadLevel("MainMenu");
+        //if (Input.anyKeyDown)
+        //    Application.LoadLevel("MainMenu");
     }
     void FixedUpdate()
     {
-        time -= Time.fixedDeltaTime;
-        if(time <= 0)
+        //time -= Time.fixedDeltaTime;
+        //if(time <= 0)
+        if (!splashMovie.isPlaying)
             Application.LoadLevel("MainMenu");
 
-        index++;
-        if (index > 1)
-            index = 0;
+        //index++;
+        //if (index > 1)
+        //    index = 0;
     }
 
     void OnGUI()
@@ -59,7 +65,7 @@ public class Splash : MonoBehaviour
         //    texture_height = screen_height * scale;
         //}
 
-        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), splashBackgroundTexture[index], ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), splashMovie, ScaleMode.StretchToFill);
 
         //if (GUI.Button(new Rect(screen_width * 0.95f - texture_width / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height / 0.3f * 0.13f * 0.5f, texture_width / 0.3f * 0.13f, texture_height / 0.3f * 0.13f), btnGoBackTexture[0], "BtnGoBack"))
         //{
