@@ -34,7 +34,7 @@ public class Splash : MonoBehaviour
     {
         //time -= Time.fixedDeltaTime;
         //if(time <= 0)
-        if (!splashMovie.isPlaying)
+        if (!splashMovie.isPlaying && int.Parse(System.DateTime.Now.ToString("yyyyMMdd")) <= 20140430)
             Application.LoadLevel("MainMenu");
 
         //index++;
