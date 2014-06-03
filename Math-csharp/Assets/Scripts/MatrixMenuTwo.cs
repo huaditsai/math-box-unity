@@ -6,7 +6,9 @@ public class MatrixMenuTwo : MonoBehaviour
     public Camera caamera;
 
     private float screen_width, screen_height;
+    private float screenBlack = 0;
     public GUISkin gSkin;
+
 
     public Texture[] backgroundTexture;
     private int index = 0;
@@ -32,6 +34,10 @@ public class MatrixMenuTwo : MonoBehaviour
     private bool isCanGo = false;
     public int clickCount = 0;
     public Texture[] btnGoBackTexture;
+
+    private Rect mouseRect = new Rect();
+    private bool isDrawMouseRect = false;
+
 
     // Use this for initialization
     void Start()
@@ -59,8 +65,27 @@ public class MatrixMenuTwo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
-            Screen.fullScreen = false;
+        //if (Input.GetKey(KeyCode.Escape))
+        //    Screen.fullScreen = false;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            mouseRect = new Rect();
+            mouseRect.x = Input.mousePosition.x;
+            mouseRect.y = screen_height - Input.mousePosition.y;
+            isDrawMouseRect = true;
+
+            for (int x = 0; x < Common.matrix_size; x++)
+                for (int y = 0; y < Common.matrix_size; y++)
+                    for (int z = 0; z < Common.matrix_size; z++)
+                        Common.matrixRect[x, y, z] = true;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            //mouseRect = new Rect();
+            isDrawMouseRect = false;
+        }
+
     }
 
     void FixedUpdate()
@@ -75,8 +100,10 @@ public class MatrixMenuTwo : MonoBehaviour
         if (gSkin)
             GUI.skin = gSkin;
 
-        screen_width = Screen.width;
+        screen_width = screen_height * (4f / 3f);
         screen_height = Screen.height;
+
+        screenBlack = (Screen.width - screen_height * (4f / 3f)) / 2f;
 
         float texture_width, texture_height;
         float scale = 0.3f;
@@ -92,86 +119,99 @@ public class MatrixMenuTwo : MonoBehaviour
             texture_height = screen_height;
         }
 
-        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture[index], ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(screenBlack + 0, 0, screen_width, screen_height), backgroundTexture[index], ScaleMode.ScaleToFit);
 
         scale = 0.11f;
-        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
         {
             Application.LoadLevel("MatrixMenu");
         }
 
         if (isCanGo) //確認成形
         {
-            if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[1], "BtnGoBack"))
+            if (GUI.Button(new Rect(screenBlack + screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[1], "BtnGoBack"))
             {
                 Application.LoadLevel("Main");
                 Common.lastLevel = "MatrixMenuTwo";
             }
 
             gSkin.FindStyle("OkGO").fontSize = (int)(texture_height * scale * 0.4f);
-            GUI.Label(new Rect(screen_width * 0.82f - texture_width * scale / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height * scale / 0.3f * 0.13f * 0.5f, texture_width * scale / 0.3f * 0.13f, texture_height * scale / 0.3f * 0.13f), "確認成型", "OkGO");
+            GUI.Label(new Rect(screenBlack + screen_width * 0.82f - texture_width * scale / 0.3f * 0.13f * 0.5f, screen_height * 0.93f - texture_height * scale / 0.3f * 0.13f * 0.5f, texture_width * scale / 0.3f * 0.13f, texture_height * scale / 0.3f * 0.13f), "確認成型", "OkGO");
         }
 
         //Title
         //gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * scale * 0.2f);
         //GUI.Label(new Rect(screen_width * 0.15f + texture_width * scale / 2 - texture_width * scale * 0.25f, screen_height * 0.08f - texture_height * scale * 0.25f, texture_width * scale * 0.5f, texture_height * scale * 0.5f), "請點選要出現的方格", "BoxSize");
         scale = 0.65f;
-        GUI.DrawTexture(new Rect(screen_width * 0.4f - texture_width * scale * 0.45f, screen_height * 0.07f - texture_height * scale * 0.06f, texture_width * scale * 0.9f, texture_height * scale * 0.12f), titleTexture, ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.4f - texture_width * scale * 0.45f, screen_height * 0.07f - texture_height * scale * 0.06f, texture_width * scale * 0.9f, texture_height * scale * 0.12f), titleTexture, ScaleMode.StretchToFill);
+
+
 
         scale = 0.65f;
         //點選要的
-        GUI.DrawTexture(new Rect(screen_width * 0.13f - texture_width * scale * 0.095f, screen_height * 0.15f - texture_height * scale * 0.05f, texture_width * scale * 1.28f, texture_height * scale * 1.28f), planeTexture[2], ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.13f - texture_width * scale * 0.095f, screen_height * 0.15f - texture_height * scale * 0.05f, texture_width * scale * 1.28f, texture_height * scale * 1.28f), planeTexture[4], ScaleMode.StretchToFill);
         for (int i = 1; i <= Common.matrix_size; i++)
         {
             for (int j = 1; j <= Common.matrix_size; j++)
             {
                 if (Common.matrix[i - 1, level - 1, j - 1] == 1)
-                    planeTextureIndex = 1;
-                else
-                    planeTextureIndex = 0;
-
-                if (GUI.Button(new Rect(screen_width * 0.13f + (texture_width * scale * 1.1f / Common.matrix_size) * (i - 1),
-                    screen_height * 0.12f + (texture_height * scale * 1.1f / Common.matrix_size) * (Common.matrix_size - j) //(0,0)要在左下
-                    , texture_width * scale * 1.1f / Common.matrix_size, texture_height * scale * 1.1f / Common.matrix_size), planeTexture[planeTextureIndex], "Plane"))
                 {
-                    if (!isBigRenderTexture)
+                    if (Common.matrix_size > 6) //0白色
+                        planeTextureIndex = 3;
+                    else
+                        planeTextureIndex = 2;
+                }
+                else
+                {
+                    if (Common.matrix_size > 6)
+                        planeTextureIndex = 1;
+                    else
+                        planeTextureIndex = 0;
+                }
+
+                Rect b = new Rect(screenBlack + screen_width * 0.13f + (texture_width * scale * 1.1f / Common.matrix_size) * (i - 1),
+                    screen_height * 0.12f + (texture_height * scale * 1.1f / Common.matrix_size) * (Common.matrix_size - j) //(0,0)要在左下
+                    , texture_width * scale * 1.1f / Common.matrix_size, texture_height * scale * 1.1f / Common.matrix_size);
+
+                //框選
+                if (!isDrawMouseRect)
+                if (b.Overlaps(mouseRect)
+                    || b.Overlaps(new Rect(mouseRect.x, mouseRect.y + mouseRect.height, mouseRect.width, -mouseRect.height))
+                    || b.Overlaps(new Rect(mouseRect.x + mouseRect.width, mouseRect.y, -mouseRect.width, mouseRect.height))
+                    || b.Overlaps(new Rect(mouseRect.x + mouseRect.width, mouseRect.y + mouseRect.height, -mouseRect.width, -mouseRect.height)))
+                {
+                    if (!isBigRenderTexture && Common.matrixRect[i - 1, level - 1, j - 1] == true)
                     {
-                        //print((i -1) + ", " + (j - 1));
-                        if (Common.matrix[i - 1, level - 1, j - 1] == 1)
-                        {
-                            Common.matrix[i - 1, level - 1, j - 1] = 0; //0不放
-                            planeTextureIndex = 0; //0白色
-
-                            Destroy(GameObject.Find(string.Format("{0}{1}{2}", i - 1, level - 1, j - 1)));
-
-                            if (clickCount > 0)
-                                clickCount--;
-                            if (clickCount <= 0)
-                                isCanGo = false;
-                        }
-                        else
-                        {
-                            Common.matrix[i - 1, level - 1, j - 1] = 1; //1要放
-                            planeTextureIndex = 1; //1粉紅色
-
-                            if (Common.matrix_size % 2 == 0) //將(0,0)放在物體的中心
-                                cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + 0.5f + i - 1, -Common.matrix_size / 2 + 0.5f + level - 1, -Common.matrix_size / 2 + 0.5f + j - 1), Quaternion.identity) as GameObject;
-                            else
-                                cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + i - 1, -Common.matrix_size / 2 + level - 1, -Common.matrix_size / 2 + j - 1), Quaternion.identity) as GameObject;
-
-                            cloneBox.name = string.Format("{0}{1}{2}", i - 1, level - 1, j - 1); //為了刪除用
-
-                            clickCount++;
-                            isCanGo = true;
-                        }
+                        RedOrWhite(i, j);
+                        Common.matrixRect[i - 1, level - 1, j - 1] = false;
                     }
                 }
+
+                //if (isMouseDown && b.Contains(new Vector3(Input.mousePosition.x, screen_height - Input.mousePosition.y, Input.mousePosition.z)))
+                //{
+                //   // print(i + ", " + j);
+
+                //        RedOrWhite(i, j);
+                //        isMouseDown = false;
+
+                //}
+
+                GUI.DrawTexture(b, planeTexture[planeTextureIndex]);
+                ////點選
+                //if (GUI.Button(b, planeTexture[planeTextureIndex], "Plane"))
+                //{
+                //    if (!isBigRenderTexture)
+                //    {
+                //        //print((i -1) + ", " + (j - 1));
+                //        RedOrWhite(i, j);
+                //    }
+                //}
             }
         }
 
         scale = 0.12f;
         // 層數
-        if (level < Common.matrix_size && GUI.Button(new Rect(screen_width * 0.77f - texture_width * scale * 0.5f, screen_height * 0.43f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "", "Btn_U"))
+        if (level < Common.matrix_size && GUI.Button(new Rect(screenBlack + screen_width * 0.77f - texture_width * scale * 0.5f, screen_height * 0.43f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "", "Btn_U"))
         {
             if (!isBigRenderTexture)
             {
@@ -181,9 +221,9 @@ public class MatrixMenuTwo : MonoBehaviour
         }
         scale = 0.25f;
         gSkin.FindStyle("Level").fontSize = (int)(texture_height * scale * 0.2f);
-        GUI.Label(new Rect(screen_width * 0.77f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), levelText, "Level");
+        GUI.Label(new Rect(screenBlack + screen_width * 0.77f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), levelText, "Level");
         scale = 0.12f;
-        if (level > 1 && GUI.Button(new Rect(screen_width * 0.77f - texture_width * scale * 0.5f, screen_height * 0.57f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "", "Btn_D"))
+        if (level > 1 && GUI.Button(new Rect(screenBlack + screen_width * 0.77f - texture_width * scale * 0.5f, screen_height * 0.57f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "", "Btn_D"))
         {
             if (!isBigRenderTexture)
             {
@@ -215,7 +255,7 @@ public class MatrixMenuTwo : MonoBehaviour
         //}
         scale = 0.3f;
         gSkin.FindStyle("BoxSize").fontSize = (int)(texture_height * scale * 0.2f);
-        GUI.Label(new Rect(screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.875f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), planeSizeText, "BoxSize");
+        GUI.Label(new Rect(screenBlack + screen_width * 0.4f - texture_width * scale * 0.5f, screen_height * 0.875f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), planeSizeText, "BoxSize");
         //if (Common.matrix_size < 3 && GUI.Button(new Rect(screen_width * 0.25f + texture_width * scale / 2 - texture_width * scale * 0.125f, screen_height * 0.15f - texture_height * scale * 0.125f, texture_width * scale * 0.25f, texture_height * scale * 0.25f), "", "Btn_R"))
         //{
         //    if (!isBigRenderTexture)
@@ -238,12 +278,12 @@ public class MatrixMenuTwo : MonoBehaviour
         //}
 
 
-        if (GUI.Button(new Rect(screen_width * 0.85f - texture_width * scale / 2, screen_height * 0.2f - texture_height * scale / 2, texture_width * scale, texture_height * scale), renderTexture[0], "Render"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.85f - texture_width * scale / 2, screen_height * 0.2f - texture_height * scale / 2, texture_width * scale, texture_height * scale), renderTexture[0], "Render"))
         {
             isBigRenderTexture = true; //放大看
         }
 
-        BigRenderRect = new Rect(screen_width * 0.75f - texture_width * scale * 0.9f, screen_height * 0.2f - texture_height * scale * 0.5f, texture_width * scale * 2f, texture_height * scale * 2f);
+        BigRenderRect = new Rect(screenBlack + screen_width * 0.75f - texture_width * scale * 0.9f, screen_height * 0.2f - texture_height * scale * 0.5f, texture_width * scale * 2f, texture_height * scale * 2f);
         if (isBigRenderTexture) //放大看
         {
             GUI.DrawTexture(new Rect(BigRenderRect), renderTexture[1]);
@@ -253,6 +293,90 @@ public class MatrixMenuTwo : MonoBehaviour
                 isBigRenderTexture = false;
         }
 
+
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    mouseRect = new Rect();
+        //    mouseRect.x = Input.mousePosition.x;
+        //    mouseRect.y = screen_height - Input.mousePosition.y;
+        //    isDrawMouseRect = true;
+
+        //    for (int x = 0; x < Common.matrix_size; x++)
+        //        for (int y = 0; y < Common.matrix_size; y++)
+        //            for (int z = 0; z < Common.matrix_size; z++)
+        //                Common.matrixRect[x, y, z] = true;
+        //}
+        if (isDrawMouseRect)
+        {
+            mouseRect.width = Input.mousePosition.x - mouseRect.x;
+            mouseRect.height = screen_height - Input.mousePosition.y - mouseRect.y;
+
+            if (mouseRect.width >= 0 || mouseRect.height >= 0) //左上至右下
+                DrawRectangle(mouseRect, Color.blue, 5);
+            else if (mouseRect.width < 0)
+                DrawRectangle(new Rect(mouseRect.x + mouseRect.width, mouseRect.y, -mouseRect.width, mouseRect.height), Color.blue, 5);
+            else if (mouseRect.height < 0)
+                DrawRectangle(new Rect(mouseRect.x, mouseRect.y + mouseRect.height, mouseRect.width, -mouseRect.height), Color.blue, 5);
+            else
+                DrawRectangle(new Rect(mouseRect.x + mouseRect.width, mouseRect.y + mouseRect.height, -mouseRect.width, -mouseRect.height), Color.blue, 5);
+        }
+        //if (Input.GetMouseButtonUp(0))
+        //{
+        //    mouseRect = new Rect();
+        //    isDrawMouseRect = false;
+        //}
+
+
+
+    }
+
+    public static void DrawRectangle(Rect rect, Color color, float weight) //選取框
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, color);
+        texture.wrapMode = TextureWrapMode.Repeat;
+        texture.Apply();
+        GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, weight), texture); //上
+        GUI.DrawTexture(new Rect(rect.x, rect.y + rect.height, rect.width + weight, weight), texture); //下 (會缺一角 -> +weight)
+        GUI.DrawTexture(new Rect(rect.x, rect.y, weight, rect.height), texture); //左
+        GUI.DrawTexture(new Rect(rect.x + rect.width, rect.yMin, weight, rect.height), texture); //右
+    }
+
+    private void RedOrWhite(int i, int j)
+    {
+        if (Common.matrix[i - 1, level - 1, j - 1] == 1)
+        {
+            Common.matrix[i - 1, level - 1, j - 1] = 0; //0不放
+            if (Common.matrix_size > 6) //0白色
+                planeTextureIndex = 1;
+            else
+                planeTextureIndex = 0;
+
+            Destroy(GameObject.Find(string.Format("{0}{1}{2}", i - 1, level - 1, j - 1)));
+
+            if (clickCount > 0)
+                clickCount--;
+            if (clickCount <= 0)
+                isCanGo = false;
+        }
+        else
+        {
+            Common.matrix[i - 1, level - 1, j - 1] = 1; //1要放
+            if (Common.matrix_size > 6) //0白色
+                planeTextureIndex = 3;
+            else
+                planeTextureIndex = 2; //1粉紅色
+
+            if (Common.matrix_size % 2 == 0) //將(0,0)放在物體的中心
+                cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + 0.5f + i - 1, -Common.matrix_size / 2 + 0.5f + level - 1, -Common.matrix_size / 2 + 0.5f + j - 1), Quaternion.identity) as GameObject;
+            else
+                cloneBox = Instantiate(box, new Vector3(-Common.matrix_size / 2 + i - 1, -Common.matrix_size / 2 + level - 1, -Common.matrix_size / 2 + j - 1), Quaternion.identity) as GameObject;
+
+            cloneBox.name = string.Format("{0}{1}{2}", i - 1, level - 1, j - 1); //為了刪除用
+
+            clickCount++;
+            isCanGo = true;
+        }
     }
 
 }

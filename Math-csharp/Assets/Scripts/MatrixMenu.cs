@@ -4,6 +4,7 @@ using System.Collections;
 public class MatrixMenu : MonoBehaviour
 {
     float screen_width, screen_height;
+    private float screenBlack = 0;
     public GUISkin gSkin;
 
     public Texture[] matrixMenuBackgroundTexture;
@@ -21,8 +22,8 @@ public class MatrixMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
-            Screen.fullScreen = false;
+        //if (Input.GetKey(KeyCode.Escape))
+        //    Screen.fullScreen = false;
     }
 
     void FixedUpdate()
@@ -37,8 +38,10 @@ public class MatrixMenu : MonoBehaviour
         if (gSkin)
             GUI.skin = gSkin;
 
-        screen_width = Screen.width;
+        screen_width = screen_height * (4f / 3f);
         screen_height = Screen.height;
+
+        screenBlack = (Screen.width - screen_height * (4f / 3f)) / 2f;
 
         float texture_width;
         float texture_height;
@@ -55,10 +58,10 @@ public class MatrixMenu : MonoBehaviour
             texture_height = screen_height;
         }
 
-        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), matrixMenuBackgroundTexture[index], ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(screenBlack + 0, 0, screen_width, screen_height), matrixMenuBackgroundTexture[index], ScaleMode.ScaleToFit);
 
         scale = 0.11f;
-        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
         {
             Application.LoadLevel("MainMenu");
         }
@@ -68,7 +71,7 @@ public class MatrixMenu : MonoBehaviour
         for (int j = 1; j <= 3; j++)
             for (int i = 1; i <= 3; i++)
             {
-                if (GUI.Button(new Rect(screen_width * ((screen_width - texture_width * scale * 3f) / 4f / screen_width) + screen_width * ((screen_width - texture_width * scale * 3f) / 8f / screen_width) * i + texture_width * scale * (i - 1),
+                if (GUI.Button(new Rect(screenBlack + screen_width * ((screen_width - texture_width * scale * 3f) / 4f / screen_width) + screen_width * ((screen_width - texture_width * scale * 3f) / 8f / screen_width) * i + texture_width * scale * (i - 1),
                     screen_height * ((screen_height - texture_height * scale * 3f) / 3f / screen_height) + screen_height * ((screen_height - texture_height * scale * 3f) / 8f / screen_height) * j + texture_height * scale * (j - 1)
                     , texture_width * scale, texture_height * scale), matrixTexture[matrix_size - 2], "BtnMatrix"))
                 {
@@ -81,7 +84,7 @@ public class MatrixMenu : MonoBehaviour
                 }
 
                 gSkin.FindStyle("Size").fontSize = (int)(texture_height * scale * 0.2f);
-                GUI.Label(new Rect(screen_width * ((screen_width - texture_width * scale * 3f) / 4f / screen_width) + screen_width * ((screen_width - texture_width * scale * 3f) / 8f / screen_width) * i + texture_width * scale * (i - 1),
+                GUI.Label(new Rect(screenBlack + screen_width * ((screen_width - texture_width * scale * 3f) / 4f / screen_width) + screen_width * ((screen_width - texture_width * scale * 3f) / 8f / screen_width) * i + texture_width * scale * (i - 1),
                     screen_height * ((screen_height - texture_height * scale * 4f) / 4f / screen_height) + screen_height * ((screen_height - texture_height * scale * 3f) / 8f / screen_height) * j + texture_height * scale * (j - 1)
                     , texture_width * scale, texture_height * scale), string.Format("{0}x{0}x{0}", matrix_size), "Size");
 

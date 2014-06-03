@@ -4,9 +4,10 @@ using System.Collections;
 public class MainMenu : MonoBehaviour
 {
     private float screen_width, screen_height;
+    private float screenBlack = 0;
 
     public GUISkin gSkin;
-    private string[] style = new string[] { "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO", "BtnMatrixNO" };
+    private string[] style = new string[] { "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix", "BtnMatrix" };
 
     public Texture[] backgroundTexture;
     private int index = 0;
@@ -25,6 +26,9 @@ public class MainMenu : MonoBehaviour
     public Texture[] pagerTexture;
     Rect pager_first;
 
+    public Texture saveWindowBackTexture;
+    private bool isExitDialog = false;
+
     // Use this for initialization
     void Start()
     {
@@ -34,8 +38,8 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
-            Screen.fullScreen = false;
+        //if (Input.GetKey(KeyCode.Escape))
+        //    Screen.fullScreen = false;
     }
 
     void FixedUpdate()
@@ -45,8 +49,8 @@ public class MainMenu : MonoBehaviour
             index = 0;
     }
 
-    float  texture_width;
-    float  texture_height;
+    float texture_width;
+    float texture_height;
     float scale = 0.5f;
 
     void OnGUI()
@@ -54,21 +58,23 @@ public class MainMenu : MonoBehaviour
         if (gSkin)
             GUI.skin = gSkin;
 
-        screen_width = Screen.width;
+        screen_width = screen_height * (4f / 3f);
         screen_height = Screen.height;
 
-        GUI.DrawTexture(new Rect(0, 0, screen_width, screen_height), backgroundTexture[index], ScaleMode.StretchToFill);
-        
+        screenBlack = (Screen.width - screen_height * (4f / 3f)) / 2f;
+
+        GUI.DrawTexture(new Rect(screenBlack + 0, 0, screen_width, screen_height), backgroundTexture[index], ScaleMode.ScaleToFit);
+
 
         if (screen_width < screen_height)
         {
-             texture_width= screen_width;
-             texture_height = screen_width;
+            texture_width = screen_width;
+            texture_height = screen_width;
         }
         else
         {
-             texture_width = screen_height;
-             texture_height = screen_height;
+            texture_width = screen_height;
+            texture_height = screen_height;
         }
 
         examplePre = exampleCur - 1;
@@ -80,46 +86,46 @@ public class MainMenu : MonoBehaviour
             exampleNxt = 0;
 
         scale = 0.4f;
-        gSkin.FindStyle("Title").fontSize = (int)( texture_height * scale * 0.1f);
+        gSkin.FindStyle("Title").fontSize = (int)(texture_height * scale * 0.1f);
         gSkin.FindStyle(style[examplePre]).contentOffset = new Vector2(0, -texture_height * scale * 0.1f);
-        if (GUI.Button(new Rect(- texture_width * scale * 0.7f, screen_height * 0.5f -  texture_height * scale * 0.7f,  texture_width * scale * 1.4f,  texture_height * scale * 1.4f), BookSampleTexture[examplePre], style[examplePre]))
+        if (GUI.Button(new Rect(screenBlack - texture_width * scale * 0.7f, screen_height * 0.5f - texture_height * scale * 0.7f, texture_width * scale * 1.4f, texture_height * scale * 1.4f), BookSampleTexture[examplePre], style[examplePre]))
         {
-            if (examplePre == 0 || examplePre == 1 || examplePre == 2)
+            if (style[examplePre] == "BtnMatrix")
                 Examples(examplePre);
         }
         gSkin.FindStyle(style[exampleCur]).contentOffset = new Vector2(0, -texture_height * scale * 0.1f);
-        if (GUI.Button(new Rect(screen_width * 0.5f -  texture_width * scale * 0.7f, screen_height * 0.5f -  texture_height * scale * 0.7f,  texture_width * scale * 1.4f,  texture_height * scale * 1.4f), BookSampleTexture[exampleCur], style[exampleCur]))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.5f - texture_width * scale * 0.7f, screen_height * 0.5f - texture_height * scale * 0.7f, texture_width * scale * 1.4f, texture_height * scale * 1.4f), BookSampleTexture[exampleCur], style[exampleCur]))
         {
-            if (exampleCur == 0 || exampleCur == 1 || exampleCur == 2)
+            if (style[exampleCur] == "BtnMatrix")
                 Examples(exampleCur);
         }
-        GUI.Label(new Rect(screen_width * 0.308f -  texture_width * scale * 0.6f, screen_height * 0.29f -  texture_height * scale * 0.7f,  texture_width * scale * 1.2f,  texture_height * scale * 1.2f), (exampleCur + 1).ToString(), "Title");
+        GUI.Label(new Rect(screenBlack + screen_width * 0.308f - texture_width * scale * 0.6f, screen_height * 0.29f - texture_height * scale * 0.7f, texture_width * scale * 1.2f, texture_height * scale * 1.2f), (exampleCur + 1).ToString(), "Title");
 
         gSkin.FindStyle(style[exampleNxt]).contentOffset = new Vector2(0, -texture_height * scale * 0.1f);
-        if (GUI.Button(new Rect(screen_width -  texture_width * scale * 0.7f, screen_height * 0.5f -  texture_height * scale * 0.7f,  texture_width * scale * 1.4f,  texture_height * scale * 1.4f), BookSampleTexture[exampleNxt], style[exampleNxt]))
+        if (GUI.Button(new Rect(screenBlack + screen_width - texture_width * scale * 0.7f, screen_height * 0.5f - texture_height * scale * 0.7f, texture_width * scale * 1.4f, texture_height * scale * 1.4f), BookSampleTexture[exampleNxt], style[exampleNxt]))
         {
-            if (exampleNxt == 0 || exampleNxt == 1 || exampleNxt == 2)
+            if (style[exampleNxt] == "BtnMatrix")
                 Examples(exampleNxt);
         }
-        GUI.Label(new Rect(screen_width * 0.808f -  texture_width * scale * 0.6f, screen_height * 0.29f -  texture_height * scale * 0.7f,  texture_width * scale * 1.2f,  texture_height * scale * 1.2f), (exampleNxt + 1).ToString(), "Title");
+        GUI.Label(new Rect(screenBlack + screen_width * 0.808f - texture_width * scale * 0.6f, screen_height * 0.29f - texture_height * scale * 0.7f, texture_width * scale * 1.2f, texture_height * scale * 1.2f), (exampleNxt + 1).ToString(), "Title");
 
         //變化組合
         scale = 0.5f;
-        gSkin.FindStyle("BtnChange").fontSize = (int)( texture_height * scale * scale * 0.27f);
-        if (GUI.Button(new Rect(screen_width * 0.5f -  texture_width * scale / 2, screen_height * 0.93f -  texture_height * scale * 0.125f,  texture_width * scale,  texture_height * scale * 0.25f), "", "BtnChange"))
+        gSkin.FindStyle("BtnChange").fontSize = (int)(texture_height * scale * scale * 0.27f);
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.5f - texture_width * scale / 2, screen_height * 0.93f - texture_height * scale * 0.125f, texture_width * scale, texture_height * scale * 0.25f), "", "BtnChange"))
         {
             Application.LoadLevel("MatrixMenu");
         }
 
         scale = 0.11f;
         //換頁
-        if (GUI.Button(new Rect(screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnTexture[0], "BtnPage"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnTexture[0], "BtnPage"))
         {
             exampleCur--;
             if (exampleCur < 0)
                 exampleCur = BookSampleTexture.Length - 1;
         }
-        if (GUI.Button(new Rect(screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnTexture[1], "BtnPage"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.95f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnTexture[1], "BtnPage"))
         {
             exampleCur++;
             if (exampleCur > BookSampleTexture.Length - 1)
@@ -222,6 +228,49 @@ public class MainMenu : MonoBehaviour
         ////目前頁數
         //GUI.DrawTexture(new Rect(pager_first.xMin +  texture_width * scale * 0.05f * 2 * pageNum, pager_first.yMin, pager_first.width, pager_first.height), pagerTexture[1], ScaleMode.StretchToFill);
 
+        scale = 0.15f;
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.07f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "", "BtnGoExit"))
+        {
+            isExitDialog = true;
+            //Application.Quit(); //離開
+        }
+
+        if (isExitDialog)
+        {
+            GUI.DrawTexture(new Rect(screenBlack + 0, 0, screen_width, screen_height), saveWindowBackTexture, ScaleMode.StretchToFill);
+            scale = 0.7f;
+            GUI.ModalWindow(0, new Rect(screenBlack + screen_width * 0.5f - texture_width * scale * 1.2f * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale * 1.2f, texture_height * scale), ExitWindow, "", "ExitWindow");
+        }
+
+
+        DrawBlack(new Rect(0, 0, screenBlack, Screen.height));
+        DrawBlack(new Rect(Screen.width - screenBlack, 0, screenBlack, Screen.height));
+    }
+
+    private void ExitWindow(int id) //離開畫面
+    {
+        scale = 0.25f;
+
+        if (GUI.Button(new Rect(screen_width * 0.22f - texture_width * scale * 0.5f, screen_height * 0.49f - texture_height * scale * 0.3f * 0.5f, texture_width * scale, texture_height * scale * 0.3f), "", "ExitOk"))
+        {
+            Application.Quit();
+        }
+
+        if (GUI.Button(new Rect(screen_width * 0.42f - texture_width * scale * 0.5f, screen_height * 0.49f - texture_height * scale * 0.3f * 0.5f, texture_width * scale, texture_height * scale * 0.3f), "", "ExitCancle"))
+        {
+            isExitDialog = false;
+        }
+    }
+
+
+    private void DrawBlack(Rect rect)
+    {
+        Texture2D blackTexture = new Texture2D(1, 1);
+        blackTexture.SetPixel(0, 0, Color.black);
+        blackTexture.wrapMode = TextureWrapMode.Repeat;
+        blackTexture.Apply();
+
+        GUI.DrawTexture(rect, blackTexture);
     }
 
     void Examples(int index)
@@ -258,20 +307,84 @@ public class MainMenu : MonoBehaviour
                 Common.matrix[3, 2, 0] = 0;
                 break;
             case 3:
+                Common.SetMatrix(4);
+                for (int i = 0; i < Common.matrix_size; i++)
+                    for (int j = 0; j < Common.matrix_size - 2; j++)
+                        for (int k = 0; k < Common.matrix_size - 2; k++)
+                            Common.matrix[i, j, k] = 1;
+                for (int i = 0; i < Common.matrix_size; i++)
+                    Common.matrix[i, 1, 0] = 0;
                 break;
             case 4:
+                Common.SetMatrix(4);
+                for (int i = 0; i < Common.matrix_size; i++)
+                    for (int j = 0; j < Common.matrix_size - 1; j++)
+                        for (int k = 0; k < Common.matrix_size - 2; k++)
+                            Common.matrix[i, j, k] = 1;
+                for (int i = 0; i < Common.matrix_size; i++)
+                    for (int j = 1; j < Common.matrix_size - 1; j++)
+                        Common.matrix[i, j, 0] = 0;
                 break;
             case 5:
+                Common.SetMatrix(5);
+                for (int i = 0; i < Common.matrix_size; i++)
+                    for (int j = 0; j < Common.matrix_size - 3; j++)
+                        for (int k = 0; k < Common.matrix_size - 3; k++)
+                            Common.matrix[i, j, k] = 1;
+                for (int i = Common.matrix_size - 2; i < Common.matrix_size; i++)
+                    for (int j = 0; j < Common.matrix_size - 3; j++)
+                        Common.matrix[i, 1, j] = 0;
                 break;
             case 6:
+                Common.SetMatrix(3);
+                Common.matrix[0, 0, 0] = 1;
+                Common.matrix[0, 0, 1] = 1;
+                Common.matrix[0, 0, 2] = 1;
+                Common.matrix[1, 0, 0] = 1;
+                Common.matrix[2, 0, 0] = 1;
+                Common.matrix[1, 0, 1] = 1;
+                Common.matrix[0, 1, 0] = 1;
+                Common.matrix[1, 1, 0] = 1;
+                Common.matrix[0, 1, 1] = 1;
+                Common.matrix[0, 2, 0] = 1;
                 break;
             case 7:
+                Common.SetMatrix(3);
+                for (int j = 0; j < Common.matrix_size; j++)
+                    for (int i = 0; i < Common.matrix_size - j; i++)
+                        for (int k = 0; k < Common.matrix_size - j; k++)
+                            Common.matrix[i, j, k] = 1;
                 break;
             case 8:
+                Common.SetMatrix(3);
+                for (int j = 0; j < Common.matrix_size; j++)
+                    for (int i = 0; i < Common.matrix_size - j; i++)
+                        for (int k = 0; k < Common.matrix_size - 1; k++)
+                            Common.matrix[i, j, k] = 1;
                 break;
             case 9:
+                Common.SetMatrix(4);
+                for (int j = 0; j < Common.matrix_size; j++)
+                    for (int i = 0; i < Common.matrix_size - j; i++)
+                        for (int k = 0; k < Common.matrix_size - j; k++)
+                        {
+                            Common.matrix[i, j, 0] = 1;
+                            Common.matrix[0, j, k] = 1;
+                        }
                 break;
             case 10:
+                Common.SetMatrix(7);
+                for (int j = 0; j < 3; j++)
+                    for (int i = 0; i < Common.matrix_size; i++)
+                        Common.matrix[i, 0, j] = 1;
+                Common.matrix[1, 1, 2] = 1;
+                Common.matrix[2, 1, 2] = 1;
+                Common.matrix[3, 1, 2] = 1;
+
+                for (int i = 4; i < Common.matrix_size; i++)
+                    Common.matrix[i, 0, 0] = 0;
+                Common.matrix[Common.matrix_size - 1, 0, 1] = 0;
+
                 break;
             //case 11:                
             //    break;
@@ -284,4 +397,7 @@ public class MainMenu : MonoBehaviour
         Common.lastLevel = "MainMenu";
         Application.LoadLevel("Main");
     }
+
+
+
 }
