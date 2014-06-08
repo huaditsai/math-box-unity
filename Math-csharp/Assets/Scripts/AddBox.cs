@@ -6,7 +6,7 @@ using System;
 
 public class AddBox : MonoBehaviour
 {
-    public Camera caamera;
+    public Camera mainCamera;
     public GameObject box;
     private GameObject cloneBox;
 
@@ -20,6 +20,7 @@ public class AddBox : MonoBehaviour
     //private int currLevelShow = 0;
 
     private string allSeparateBtnString = "全部分開";
+    private string allSeparateBtnStyle = "SpAll";
     private bool isSeparateBtn_All = false;
     private bool isSeparate_All = false;
     private Vector3[] fromPos;
@@ -116,9 +117,9 @@ public class AddBox : MonoBehaviour
         else
             zoomBase = Common.matrix_size;
 
-        caamera.orthographicSize = zoomBase;
+        mainCamera.orthographicSize = zoomBase;
         cameraLook = new Vector3((maxX + minX) / 2f, (maxY + minY) / 2f, (maxZ + minZ) / 2f);
-        transform.LookAt(cameraLook);
+        mainCamera.transform.LookAt(cameraLook);
 
 
         fromPos = new Vector3[totLevel_Y];
@@ -154,6 +155,8 @@ public class AddBox : MonoBehaviour
                 }
             }
         }
+
+        RenderSettings.skybox = materials[2];
     }
 
     public Vector3 mousepos;
@@ -166,7 +169,7 @@ public class AddBox : MonoBehaviour
 
         if (isZoom)
         {
-            caamera.orthographicSize = Mathf.Lerp(caamera.orthographicSize, zoomTo, Time.deltaTime * 5f);
+            mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, zoomTo, Time.deltaTime * 5f);
         }
 
 
@@ -182,20 +185,20 @@ public class AddBox : MonoBehaviour
         {
             //Get the point on the plane
             mousepos = Input.mousePosition;
-            mousepos.y = Screen.height - mousepos.y;
-            mousepos = mousepos - new Vector3(renderTextureRect.xMin, renderTextureRect.yMin, 0);
+            //mousepos.y = Screen.height - mousepos.y;
+            //mousepos = mousepos - new Vector3(renderTextureRect.xMin, renderTextureRect.yMin, 0);
 
-            //Convert the coordinate to the mapCam's resolutiion
-            mousepos.x *= camera.pixelWidth / renderTextureRect.width;
-            mousepos.y *= camera.pixelHeight / renderTextureRect.height;
-            mousepos.y = camera.pixelHeight - mousepos.y;
+            ////Convert the coordinate to the mapCam's resolutiion
+            //mousepos.x *= camera.pixelWidth / renderTextureRect.width;
+            //mousepos.y *= camera.pixelHeight / renderTextureRect.height;
+            //mousepos.y = camera.pixelHeight - mousepos.y;
 
             RaycastHit hit = new RaycastHit();
-            if (Physics.Raycast(camera.ScreenPointToRay(mousepos), out hit))
+            if (Physics.Raycast(mainCamera.ScreenPointToRay(mousepos), out hit))
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    print(hit.transform.parent.name);
+                    //print(hit.transform.parent.name);
                     separate_name = int.Parse(hit.transform.parent.name);
 
                     //因為Group是擺好後加上的，所以座標一樣時就是黏住                    
@@ -215,41 +218,20 @@ public class AddBox : MonoBehaviour
                             }
                         }
                     }
-                    for (int i = separate_name + 2; i < totLevel_Y; i++)
+                    for (int i = separate_name + 2; i < totLevel_Y; i++) //上
                     {
                         if (isSeparateBtn && !isMoved[i])
                             toPos_One[i] = toPos_One[i - 1];
-                        else if (isMergeBtn)
-                            toPos_One[i] = toPos_All[i - 1];
+                        else if (isMergeBtn && isMoved[i])
+                            toPos_One[i] = GameObject.Find(i.ToString()).transform.position + fromPos[separate_name + 1] - toPos_All[separate_name + 1];
                     }
-                    for (int i = separate_name - 2; i >= 0; i--)
+                    for (int i = separate_name - 2; i >= 0; i--) //下 
                     {
                         if (isSeparateBtn && !isMoved[i])
                             toPos_One[i] = toPos_One[i + 1];
-                        else if (isMergeBtn)
-                            toPos_One[i] = toPos_All[i + 1];
+                        else if (isMergeBtn && isMoved[i])
+                            toPos_One[i] = GameObject.Find(i.ToString()).transform.position + fromPos[separate_name - 1] - toPos_All[separate_name - 1];
                     }
-
-                    //for (int i = 0; i < totLevel_Y; i++)
-                    //{
-                    //    if (!isMoved[i] && isSeparateBtn)
-                    //    {
-                    //        if (0 <= i - 1 && i < separate_name - 1)
-                    //        {
-                    //            toPos_One[i] = toPos_One[i + 1];
-                    //        }
-                    //        else if (separate_name - 1 <= i && i <= separate_name + 1)
-                    //        {
-                    //            toPos_One[i] = toPos_All[i];
-                    //            isMoved[i] = true;
-                    //        }
-                    //        else if (i + 1 < totLevel_Y && separate_name + 1 < i)
-                    //        {
-                    //            toPos_One[i] = toPos_One[i - 1];
-                    //        }
-                    //    }
-
-                    //}
 
                     isSeparate_One = true;
                 }
@@ -272,12 +254,33 @@ public class AddBox : MonoBehaviour
         }
     }
 
+    bool isStartTimer = false;
+    int countDownTime = 1;
     void FixedUpdate()
     {
         index++;
         if (index > 1)
             index = 0;
+
+        if (isStartTimer)
+        {
+            countDownTime--;
+            if (countDownTime <= 0)
+            {
+                isHideGUI = false;
+                isSaveDialog = true;
+                isSaveOK = true;
+                RenderSettings.skybox = materials[2]; //orange
+
+                StartCoroutine("LoadImage", path);
+
+                countDownTime = 2;
+                isStartTimer = false;
+            }
+        }
     }
+
+    bool isHideGUI = false;
 
     private float rotateY = Mathf.PI / 3;
     private float rotateZ = 2 * Mathf.PI / 3;
@@ -345,145 +348,78 @@ public class AddBox : MonoBehaviour
         GUI.DrawTexture(new Rect(screenBlack + 0, 0, screen_width, screen_height), backgroundTexture[index], ScaleMode.ScaleToFit);
 
         //主要
-        scale = 0.75f;
-        GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.38f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTextureBack);
-        scale = 0.72f;
-        renderTextureRect = new Rect(screenBlack + screen_width * 0.38f - texture_width * scale * 0.5f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale);
-        GUI.DrawTexture(renderTextureRect, renderTexture);
+        //scale = 0.73f;
+        //GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.47f - texture_width * scale * 0.5f, screen_height * 0.48f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), renderTextureBack);
+        scale = 0.70f;
+        renderTextureRect = new Rect(screenBlack + screen_width * 0.475f - texture_width * scale * 0.5f, screen_height * 0.525f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale);
+        //GUI.DrawTexture(renderTextureRect, renderTextureBack);
+
+        scale = 0.73f;
+        mainCamera.rect = new Rect((screen_width * 0.47f - texture_width * scale * 0.5f) / screen_width, (screen_height * 0.52f - texture_height * scale * 0.5f) / screen_height, texture_width * scale / screen_width, texture_height * scale / screen_height);
 
         //旋轉
+        scale = 0.71f;
         gSkin.FindStyle("horizontalsliderthumb").overflow = new RectOffset(0, 0, (int)(texture_height * scale * 0.02f), -(int)(texture_height * scale * 0.05f));
-        rotateZ = GUI.HorizontalSlider(new Rect(screenBlack + screen_width * 0.38f - texture_width * scale * 0.5f, screen_height * 0.91f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.1f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
-        rotateY = GUI.VerticalSlider(new Rect(screenBlack + screen_width * 0.71f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
-        caamera.transform.position = new Vector3(
+        rotateZ = GUI.HorizontalSlider(new Rect(screenBlack + screen_width * 0.46f - texture_width * scale * 0.5f, screen_height * 0.91f - texture_height * scale * 0.5f * 0.1f, texture_width * scale, texture_height * scale * 0.1f), rotateZ, 0.0001f, 2f * Mathf.PI, "horizontalslider", "horizontalsliderthumb");
+        rotateY = GUI.VerticalSlider(new Rect(screenBlack + screen_width * 0.79f - texture_width * scale * 0.5f * 0.1f, screen_height * 0.47f - texture_height * scale * 0.5f, texture_width * scale * 0.03f, texture_height * scale), rotateY, Mathf.PI - 0.0001f, 0.0001f, "VerticalSlider", "VerticalSliderthumb");
+        mainCamera.transform.position = new Vector3(
            cameraLook.x + cameraDistance * Mathf.Sin(rotateY) * Mathf.Cos(rotateZ),
            cameraLook.y + cameraDistance * Mathf.Cos(rotateY),
            cameraLook.z - cameraDistance * Mathf.Sin(rotateY) * Mathf.Sin(rotateZ));
-        caamera.transform.LookAt(cameraLook);
+        mainCamera.transform.LookAt(cameraLook);
 
         scale = 0.08f;
-        GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.63f + texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), rotateTexture, ScaleMode.ScaleAndCrop);
+        GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.71f + texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), rotateTexture, ScaleMode.ScaleAndCrop);
 
         //縮放按鈕
-        scale = 0.06f;
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.51f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
+        if (!isHideGUI)
         {
-            zoomTo = caamera.orthographicSize + 0.2f;
-            if (zoomTo < 10f)
+            scale = 0.05f;
+            if (GUI.Button(new Rect(screenBlack + screen_width * 0.62f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
+            {
+                zoomTo = mainCamera.orthographicSize + 0.2f;
+                if (zoomTo < 10f)
+                    isZoom = true;
+                else
+                    zoomTo = 10f;
+
+                if (zoomTo > zoomBase)
+                    zoomPercent = 100 - (int)((zoomTo - zoomBase) / (10f - zoomBase) * 100f);
+                else if (zoomTo < zoomBase)
+                    zoomPercent = 100 + (int)((zoomBase - zoomTo) / (zoomBase - 0.5f) * 100f);
+                else
+                    zoomPercent = 100;
+            }
+            gSkin.FindStyle("ZoomPercent").fontSize = (int)(texture_height * scale * 0.5f);
+            //gSkin.FindStyle("ZoomPercent").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+            if (GUI.Button(new Rect(screenBlack + screen_width * 0.67f - texture_width * scale * 0.9f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale * 1.8f, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
+            {
+                if (Common.matrix_size > 5)
+                    zoomBase = Common.matrix_size - 2;
+                else
+                    zoomBase = Common.matrix_size;
+
+                //caamera.orthographicSize = Common.matrix_size;
+                zoomTo = zoomBase;
                 isZoom = true;
-            else
-                zoomTo = 10f;
-
-            if (zoomTo > zoomBase)
-                zoomPercent = 100 - (int)((zoomTo - zoomBase) / (10f - zoomBase) * 100f);
-            else if (zoomTo < zoomBase)
-                zoomPercent = 100 + (int)((zoomBase - zoomTo) / (zoomBase - 0.5f) * 100f);
-            else
                 zoomPercent = 100;
-        }
-        gSkin.FindStyle("ZoomPercent").fontSize = (int)(texture_height * scale * 0.5f);
-        //gSkin.FindStyle("ZoomPercent").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.57f - texture_width * scale * 0.9f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale * 1.8f, texture_height * scale), zoomPercent.ToString() + "%", "ZoomPercent"))
-        {
-            if (Common.matrix_size > 5)
-                zoomBase = Common.matrix_size - 2;
-            else
-                zoomBase = Common.matrix_size;
-
-            //caamera.orthographicSize = Common.matrix_size;
-            zoomTo = zoomBase;
-            isZoom = true;
-            zoomPercent = 100;
-        }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.63f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
-        {
-            zoomTo = caamera.orthographicSize - 0.2f;
-            if (zoomTo > 0.5f)
-                isZoom = true;
-            else
-                zoomTo = 0.5f;
-
-            if (zoomTo > zoomBase)
-                zoomPercent = 100 - (int)((zoomTo - zoomBase) / (10f - zoomBase) * 100f);
-            else if (zoomTo < zoomBase)
-                zoomPercent = 100 + (int)((zoomBase - zoomTo) / (zoomBase - 0.5f) * 100f);
-            else
-                zoomPercent = 100;
-        }
-
-
-
-        //分層按鈕
-        scale = 0.15f;
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.3f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), allSeparateBtnString))
-        {
-            isSeparateBtn_All = true;
-            isSeparateBtn = false;
-            isMergeBtn = false;
-
-            if (isSeparate_All)
-            {
-                for (int i = 0; i < totLevel_Y; i++)
-                    GameObject.Find(i.ToString()).transform.position = toPos_All[i];
-
-                allSeparateBtnString = "全部分開";
             }
-            else
+            if (GUI.Button(new Rect(screenBlack + screen_width * 0.72f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[0], "Zoom"))
             {
-                for (int i = 0; i < totLevel_Y; i++)
-                    GameObject.Find(i.ToString()).transform.position = fromPos[i];
+                zoomTo = mainCamera.orthographicSize - 0.2f;
+                if (zoomTo > 0.5f)
+                    isZoom = true;
+                else
+                    zoomTo = 0.5f;
 
-                allSeparateBtnString = "全部組合";
+                if (zoomTo > zoomBase)
+                    zoomPercent = 100 - (int)((zoomTo - zoomBase) / (10f - zoomBase) * 100f);
+                else if (zoomTo < zoomBase)
+                    zoomPercent = 100 + (int)((zoomBase - zoomTo) / (zoomBase - 0.5f) * 100f);
+                else
+                    zoomPercent = 100;
             }
-
-            isSeparate_All = !isSeparate_All;
-
-
-            //for (int i = 0; i < levelMax_Y; i++)
-            //{
-            //    Renderer[] listOfChildren = GameObject.Find(i.ToString()).GetComponentsInChildren<Renderer>();
-            //    if (i != currLevelShow)
-            //        foreach (Renderer child in listOfChildren)
-            //            child.enabled = false;
-            //    else
-            //        foreach (Renderer child in listOfChildren)
-            //            child.enabled = true;
-            //}
-
-            //currLevelShow++;
-            //if (currLevelShow >= levelMax_Y)
-            //    currLevelShow = 0;
         }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.5f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "分層分開"))
-        {
-            isSeparateBtn_All = false;
-            isMergeBtn = false;
-
-            for (int i = 0; i < totLevel_Y; i++)
-            {
-                toPos_One[i] = GameObject.Find(i.ToString()).transform.position;
-                isMoved[i] = false;
-            }
-
-            isSeparateBtn = !isSeparateBtn;
-
-        }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), "分層組合"))
-        {
-            isSeparateBtn_All = false;
-            isSeparateBtn = false;
-
-            for (int i = 0; i < totLevel_Y; i++)
-            {
-                toPos_One[i] = GameObject.Find(i.ToString()).transform.position;
-                isMoved[i] = false;
-            }
-
-            isMergeBtn = !isMergeBtn;
-
-        }
-
-
 
         //回上頁
         scale = 0.11f;
@@ -514,13 +450,13 @@ public class AddBox : MonoBehaviour
         //    GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), count + " 個", "Count");
         //}
 
-        scale = 0.27f;
+        scale = 0.22f;
         //if (isShowSetting)
         //{
         gSkin.FindStyle("Settings").fontSize = (int)(texture_height * scale * 0.2f);
         gSkin.FindStyle("Settings").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
         //設定們
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.23f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.9f - texture_width * scale * 0.5f, screen_height * 0.26f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
         {
             isSaveDialog = true;
 
@@ -571,7 +507,7 @@ public class AddBox : MonoBehaviour
             gSkin.FindStyle("Settings2").fontSize = (int)(texture_height * scale * 0.4f);
             gSkin.FindStyle("Settings2").contentOffset = new Vector2(0, 0);
         }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.445f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.9f - texture_width * scale * 0.5f, screen_height * 0.44f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
         {
             count = 0;
             if (!isShowCount)
@@ -590,13 +526,14 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isShowCount = !isShowCount;
         }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.66f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.9f - texture_width * scale * 0.5f, screen_height * 0.62f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
         {
             if (!isHideLine) //隱藏
             {
                 foreach (GameObject item in GameObject.FindGameObjectsWithTag("Box"))
                     item.renderer.material = materials[1];
-                caamera.GetComponent<EdgeDetectEffectNormals>().enabled = true;
+                mainCamera.GetComponent<EdgeDetectEffectNormals>().enabled = true;
+                mainCamera.GetComponent<AntialiasingAsPostEffect>().enabled = true;
 
                 lineText = "顯示線條";
             }
@@ -604,7 +541,8 @@ public class AddBox : MonoBehaviour
             {
                 foreach (GameObject item in GameObject.FindGameObjectsWithTag("Box"))
                     item.renderer.material = materials[0];
-                caamera.GetComponent<EdgeDetectEffectNormals>().enabled = false;
+                mainCamera.GetComponent<EdgeDetectEffectNormals>().enabled = false;
+                mainCamera.GetComponent<AntialiasingAsPostEffect>().enabled = false;
 
                 lineText = "隱藏線條";
             }
@@ -612,13 +550,90 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isHideLine = !isHideLine;
         }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.85f - texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.9f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
         {
             Common.init();
             //isShowSetting = false;
             Application.LoadLevel("MainMenu");
         }
-        //}        
+        //} 
+
+        //分層按鈕
+        gSkin.FindStyle(allSeparateBtnStyle).fontSize = (int)(texture_height * scale * 0.2f);
+        gSkin.FindStyle(allSeparateBtnStyle).contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.1f - texture_width * scale * 0.5f, screen_height * 0.35f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), allSeparateBtnString, allSeparateBtnStyle))
+        {
+            isSeparateBtn_All = true;
+            isSeparateBtn = false;
+            isMergeBtn = false;
+
+            if (isSeparate_All)
+            {
+                for (int i = 0; i < totLevel_Y; i++)
+                    GameObject.Find(i.ToString()).transform.position = toPos_All[i];
+
+                allSeparateBtnString = "全部分開";
+                allSeparateBtnStyle = "SpAll";
+            }
+            else
+            {
+                for (int i = 0; i < totLevel_Y; i++)
+                    GameObject.Find(i.ToString()).transform.position = fromPos[i];
+
+                allSeparateBtnString = "全部組合";
+                allSeparateBtnStyle = "CloseAll";
+            }
+
+            isSeparate_All = !isSeparate_All;
+
+
+            //for (int i = 0; i < levelMax_Y; i++)
+            //{
+            //    Renderer[] listOfChildren = GameObject.Find(i.ToString()).GetComponentsInChildren<Renderer>();
+            //    if (i != currLevelShow)
+            //        foreach (Renderer child in listOfChildren)
+            //            child.enabled = false;
+            //    else
+            //        foreach (Renderer child in listOfChildren)
+            //            child.enabled = true;
+            //}
+
+            //currLevelShow++;
+            //if (currLevelShow >= levelMax_Y)
+            //    currLevelShow = 0;
+        }
+        gSkin.FindStyle("SpOne").fontSize = (int)(texture_height * scale * 0.2f);
+        gSkin.FindStyle("SpOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.1f - texture_width * scale * 0.5f, screen_height * 0.55f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層分開", "SpOne"))
+        {
+            isSeparateBtn_All = false;
+            isMergeBtn = false;
+
+            for (int i = 0; i < totLevel_Y; i++)
+            {
+                toPos_One[i] = GameObject.Find(i.ToString()).transform.position;
+                isMoved[i] = false;
+            }
+
+            isSeparateBtn = !isSeparateBtn;
+
+        }
+        gSkin.FindStyle("CloseOne").fontSize = (int)(texture_height * scale * 0.2f);
+        gSkin.FindStyle("CloseOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.1f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層組合", "CloseOne"))
+        {
+            isSeparateBtn_All = false;
+            isSeparateBtn = false;
+
+            for (int i = 0; i < totLevel_Y; i++)
+            {
+                toPos_One[i] = GameObject.Find(i.ToString()).transform.position;
+                isMoved[i] = false;
+            }
+
+            isMergeBtn = !isMergeBtn;
+
+        }
 
         //標題        
         //scale = 0.4f;
@@ -673,15 +688,17 @@ public class AddBox : MonoBehaviour
         }
     }
 
-
+    public Shader shader;
     bool isSaveOK = false;
+    string path = "";
+
     private void SaveWindow(int id) //存檔畫面
     {
         scale = 0.35f;
 
         if (!isSaveOK)
         {
-            string path = "";
+            path = "";
 
             if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.23f - texture_height * scale * 0.2f * 0.5f, texture_width * scale, texture_height * scale * 0.2f), "", "SaveDeskTop"))
             {
@@ -698,14 +715,32 @@ public class AddBox : MonoBehaviour
 
             if (path.Length != 0)
             {
-                RenderTexture mainRender = renderTexture;
-                Texture2D myTexture2D = new Texture2D(mainRender.width, mainRender.height);
-                RenderTexture.active = mainRender;
-                myTexture2D.ReadPixels(new Rect(0, 0, mainRender.width, mainRender.height), 0, 0);
-                myTexture2D.Apply();
+                //if (!isHideLine)
+                //{
+                //    RenderTexture mainRender = renderTexture;
+                //    mainCamera.targetTexture = mainRender;
+                //    Texture2D myTexture2D = new Texture2D(mainRender.width, mainRender.height);
+                //    mainCamera.Render();
+                //    RenderTexture.active = mainRender;
+                //    myTexture2D.ReadPixels(new Rect(0, 0, mainRender.width, mainRender.height), 0, 0);
+                //    myTexture2D.Apply();
 
-                File.WriteAllBytes(path, myTexture2D.EncodeToPNG());
-                isSaveOK = true;
+                //    mainCamera.targetTexture = null;
+                //    RenderTexture.active = null;
+
+                //    File.WriteAllBytes(path, myTexture2D.EncodeToPNG());
+                //    isSaveOK = true;
+                //}
+                //else
+                //{
+                    isHideGUI = true;
+                    isSaveDialog = false;
+                    RenderSettings.skybox = materials[1]; //white
+                    Application.CaptureScreenshot(path);
+
+                    //LoadImage("C:\\Users\\huadi\\Desktop\\20140606005721.jpg");
+                    isStartTimer = true;
+                //}
             }
 
 
@@ -728,6 +763,34 @@ public class AddBox : MonoBehaviour
                 isSaveDialog = false;
             }
         }
+    }
+
+    private IEnumerator LoadImage(string path) //因為renderTexture我存不了shader
+    {        
+        WWW www = new WWW("file:///" + path);
+        yield return www;
+        Texture2D tmpTexture = new Texture2D(1024, 1024, TextureFormat.ARGB32, false);
+        www.LoadImageIntoTexture(tmpTexture);
+
+        Texture2D myTexture2D = new Texture2D((int)renderTextureRect.width, (int)renderTextureRect.height, TextureFormat.ARGB32, false);
+        for (int y = (int)renderTextureRect.yMin; y < (int)renderTextureRect.yMax; y++)
+            for (int x = (int)renderTextureRect.xMin; x < (int)renderTextureRect.xMax; x++)
+                myTexture2D.SetPixel(x - (int)renderTextureRect.xMin, y - (int)renderTextureRect.yMin, tmpTexture.GetPixel(x, y));
+        
+        //Texture2D myTexture2D = new Texture2D(tmpTexture.width, tmpTexture.height, TextureFormat.ARGB32, false);
+        //for (int y = 0; y < tmpTexture.height; y++)
+        //{
+        //    for (int x = 0; x < tmpTexture.width; x++)
+        //    {                
+        //        if (renderTextureRect.xMin < x && x < renderTextureRect.xMax && renderTextureRect.yMin < y && y < renderTextureRect.yMax)
+        //            myTexture2D.SetPixel(x, y, tmpTexture.GetPixel(x, y));
+        //        else
+        //            myTexture2D.SetPixel(x, y, Color.clear);
+        //    }            
+        //}
+
+        myTexture2D.Apply();
+        File.WriteAllBytes(path, myTexture2D.EncodeToPNG());
     }
 
 
