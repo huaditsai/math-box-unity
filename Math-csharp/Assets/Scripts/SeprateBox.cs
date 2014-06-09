@@ -51,7 +51,7 @@ public class SeprateBox : MonoBehaviour
         // 找尋每一層
         for (int i = 0; i < CUBES_NUMBER; i++)
         {
-            Cubes[i] = GameObject.Find("Cube_" + (i + 1).ToString());
+            Cubes[i] = GameObject.Find((i + 1).ToString());
         }
 
         // 初始化
@@ -88,7 +88,7 @@ public class SeprateBox : MonoBehaviour
                     separateCube = hit.collider.gameObject;
 
                     // 找到是第幾層（從名字去找）
-                    int separateNumber = int.Parse(separateCube.name.Split('_')[1]);
+                    int separateNumber = int.Parse(separateCube.name);
 
                     TopCubes.Clear();
                     TopCubesPosition.Clear();
@@ -142,7 +142,7 @@ public class SeprateBox : MonoBehaviour
                     separateCube = hit.collider.gameObject;
 
                     // 找到是第幾層（從名字去找）
-                    int separateNumber = int.Parse(separateCube.name.Split('_')[1]);
+                    int separateNumber = int.Parse(separateCube.name);
 
                     TopCubes.Clear();
                     TopCubesPosition.Clear();

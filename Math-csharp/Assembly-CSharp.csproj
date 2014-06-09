@@ -48,10 +48,10 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AddBox.cs" />
      <Compile Include="Assets\Scripts\Common.cs" />
-     <Compile Include="Assets\Scripts\DepthNormalTexImageEffect.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\MatrixMenu.cs" />
      <Compile Include="Assets\Scripts\MatrixMenuTwo.cs" />
+     <Compile Include="Assets\Scripts\SeprateBox.cs" />
      <Compile Include="Assets\Scripts\Splash.cs" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseEffectShaderRGB.shader" />
