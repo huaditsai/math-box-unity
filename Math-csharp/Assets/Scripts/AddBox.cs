@@ -14,8 +14,9 @@ public class AddBox : MonoBehaviour
     //public GameObject plane;
 
     public Vector3 cameraLook;
-    private float cameraDistance = 8.8f;
+    private float cameraDistance = 20f;
     private float zoomBase = 0;
+    private float zoomMax = 10;
 
     private int totLevel_Y = 0; //Y的層數
     //private int currLevelShow = 0;
@@ -139,9 +140,15 @@ public class AddBox : MonoBehaviour
         }
 
         if (Common.matrix_size > 5)
+        {
             zoomBase = Common.matrix_size - 2;
+            zoomMax = 12f;
+        }
         else
+        {
             zoomBase = Common.matrix_size;
+            zoomMax = 10f;
+        }
 
         mainCamera.orthographicSize = zoomBase;
         cameraLook = new Vector3((maxX + minX) / 2f, (maxY + minY) / 2f, (maxZ + minZ) / 2f);
@@ -270,8 +277,8 @@ public class AddBox : MonoBehaviour
 
     bool isHideGUI = false;
 
-    public float rotateY = 1.225706f;
-    public float rotateZ = 1.394608f;
+    private float rotateY = 1.225706f;
+    private float rotateZ = 1.394608f;
 
     public Texture btnBackTexture;
     public Texture[] backgroundTexture;
@@ -366,13 +373,13 @@ public class AddBox : MonoBehaviour
             if (GUI.Button(new Rect(screenBlack + screen_width * 0.535f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), zoomTexture[1], "Zoom"))
             {
                 zoomTo = mainCamera.orthographicSize + 0.2f;
-                if (zoomTo < 10f)
+                if (zoomTo < zoomMax)
                     isZoom = true;
                 else
-                    zoomTo = 10f;
+                    zoomTo = zoomMax;
 
                 if (zoomTo > zoomBase)
-                    zoomPercent = 100 - (int)((zoomTo - zoomBase) / (10f - zoomBase) * 100f);
+                    zoomPercent = 100 - (int)((zoomTo - zoomBase) / (zoomMax - zoomBase) * 100f);
                 else if (zoomTo < zoomBase)
                     zoomPercent = 100 + (int)((zoomBase - zoomTo) / (zoomBase - 0.5f) * 100f);
                 else
@@ -552,38 +559,45 @@ public class AddBox : MonoBehaviour
         gSkin.FindStyle(allSeparateBtnStyle).contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
         if (GUI.Button(new Rect(screenBlack + screen_width * 0.065f - texture_width * scale * 0.5f, screen_height * 0.35f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), allSeparateBtnString, allSeparateBtnStyle))
         {
-            isSeparateBtn_All = true;
-            isSeparateBtn = false;
-            isMergeBtn = false;
-
-            if (isSeparate_All)
+            if (!isCombining && !isSeparating)
             {
-                allSeparateBtnString = "全部分開";
-                allSeparateBtnStyle = "SpAll";
-            }
-            else
-            {
-                allSeparateBtnString = "全部組合";
-                allSeparateBtnStyle = "CloseAll";
-            }
+                isSeparateBtn_All = true;
+                isSeparateBtn = false;
+                isMergeBtn = false;
 
-            isSeparate_All = !isSeparate_All;
+                if (isSeparate_All)
+                {
+                    allSeparateBtnString = "全部分開";
+                    allSeparateBtnStyle = "SpAll";
+                }
+                else
+                {
+                    allSeparateBtnString = "全部組合";
+                    allSeparateBtnStyle = "CloseAll";
+                }
+
+                isSeparate_All = !isSeparate_All;
+            }
         }
         gSkin.FindStyle("SpOne").fontSize = (int)(texture_height * scale * 0.2f);
         gSkin.FindStyle("SpOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
         if (GUI.Button(new Rect(screenBlack + screen_width * 0.065f - texture_width * scale * 0.5f, screen_height * 0.6f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層分開", "SpOne"))
         {
-            //isSeparateBtn_All = false;
-            isMergeBtn = false;
-            isSeparateBtn = !isSeparateBtn;
+            if (!isSeparateBtn_All)
+            {
+                isMergeBtn = false;
+                isSeparateBtn = !isSeparateBtn;
+            }
         }
         gSkin.FindStyle("CloseOne").fontSize = (int)(texture_height * scale * 0.2f);
         gSkin.FindStyle("CloseOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
         if (GUI.Button(new Rect(screenBlack + screen_width * 0.065f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層組合", "CloseOne"))
         {
-            //isSeparateBtn_All = false;
-            isSeparateBtn = false;
-            isMergeBtn = !isMergeBtn;
+            if (!isSeparateBtn_All)
+            {
+                isSeparateBtn = false;
+                isMergeBtn = !isMergeBtn;
+            }
         }
 
         scale = 0.035f;
