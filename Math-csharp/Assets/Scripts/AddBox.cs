@@ -7,6 +7,8 @@ using System.Collections.Generic;
 
 public class AddBox : MonoBehaviour
 {
+    private Texture2D blackTexture; //畫黑邊
+
     public Camera mainCamera;
     public GameObject box;
     private GameObject cloneBox;
@@ -64,6 +66,11 @@ public class AddBox : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        blackTexture = new Texture2D(1, 1);
+        blackTexture.SetPixel(0, 0, Color.black);
+        blackTexture.wrapMode = TextureWrapMode.Repeat;
+        blackTexture.Apply();
+
         int count = 0;
         float posX, posY, posZ;
 
@@ -630,19 +637,9 @@ public class AddBox : MonoBehaviour
         }
 
         //黑邊
-        DrawBlack(new Rect(0, 0, screenBlack, Screen.height));
-        DrawBlack(new Rect(Screen.width - screenBlack, 0, screenBlack, Screen.height));
+        GUI.DrawTexture(new Rect(0, 0, screenBlack, Screen.height), blackTexture);
+        GUI.DrawTexture(new Rect(Screen.width - screenBlack, 0, screenBlack, Screen.height), blackTexture);
 
-    }
-
-    private void DrawBlack(Rect rect) //黑邊
-    {
-        Texture2D blackTexture = new Texture2D(1, 1);
-        blackTexture.SetPixel(0, 0, Color.black);
-        blackTexture.wrapMode = TextureWrapMode.Repeat;
-        blackTexture.Apply();
-
-        GUI.DrawTexture(rect, blackTexture);
     }
 
     private void ExitWindow(int id) //存檔畫面
