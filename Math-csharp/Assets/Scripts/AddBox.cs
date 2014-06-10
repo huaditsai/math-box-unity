@@ -188,7 +188,9 @@ public class AddBox : MonoBehaviour
             }
         }
 
-        RenderSettings.skybox = materials[2];
+        //RenderSettings.skybox = materials[2];
+
+        mainCamera.backgroundColor = new Color(1, 124f / 255f, 0);
     }
 
     public Vector3 mousepos;
@@ -214,29 +216,24 @@ public class AddBox : MonoBehaviour
         }
 
         SeprateCombine();
-
-        GameObject obj = null;
-        if ((obj = GameObject.Find("0")) != null)
-            cameraLook.y = (GameObject.Find("0").transform.position.y + GameObject.Find((totLevel_Y - 1).ToString()).transform.position.y) / 2;
-
     }
 
     private void MoveBox(Vector3[] to)
     {
-        GameObject obj = null;
         for (int i = 0; i < totLevel_Y; i++)
         {
-            if ((obj = GameObject.Find(i.ToString())) != null)
-                GameObject.Find(i.ToString()).transform.position = Vector3.Lerp(GameObject.Find(i.ToString()).transform.position, to[i], Time.smoothDeltaTime * 3.5f);                      
+            Cubes[i].transform.position = Vector3.Lerp(Cubes[i].transform.position, to[i], Time.smoothDeltaTime * 3.5f);
         }
+
+        //攝影機跟著動，不然會整疊跑出螢幕
+        cameraLook.y = (Cubes[0].transform.position.y + Cubes[totLevel_Y - 1].transform.position.y) / 2;
 
         currentMoveValue += Time.smoothDeltaTime;
         if (currentMoveValue >= separateDistance / 2)
         {
             for (int i = 0; i < totLevel_Y; i++)
             {
-                if ((obj = GameObject.Find(i.ToString())) != null)
-                    GameObject.Find(i.ToString()).transform.position = to[i];
+                Cubes[i].transform.position = to[i];
             }
             isSeparateBtn_All = false;
             currentMoveValue = 0;
@@ -259,8 +256,9 @@ public class AddBox : MonoBehaviour
                 isHideGUI = false;
                 isSaveDialog = true;
                 isSaveOK = true;
-                RenderSettings.skybox = materials[2]; //orange
-                mainCamera.GetComponentInChildren<MeshRenderer>().enabled = true;
+                mainCamera.backgroundColor = new Color(1, 124f / 255f, 0);
+                //                RenderSettings.skybox = materials[2]; //orange
+                //mainCamera.GetComponentInChildren<MeshRenderer>().enabled = true;
 
                 StartCoroutine("LoadImage", path);
 
@@ -275,21 +273,21 @@ public class AddBox : MonoBehaviour
     public float rotateY = 1.225706f;
     public float rotateZ = 1.394608f;
 
+    public Texture btnBackTexture;
     public Texture[] backgroundTexture;
     private int index = 0;
 
-    public Texture titleTexture;
+    //public Texture titleTexture;
     public Texture rotateTexture;
 
     public GUISkin gSkin;
-    public Texture[] btnGoBackTexture;
     public Texture[] zoomTexture;
-    public Texture[] btnSettingTexture;
-    public Texture renderTextureBack; //要有兩個camera才Build成功
-    public RenderTexture renderTexture;
+    //public Texture[] btnSettingTexture;
+    //public Texture renderTextureBack; //要有兩個camera才Build成功
+    //public RenderTexture renderTexture;
     private Rect renderTextureRect = new Rect();
 
-    public Texture exitWindowBackTexture;
+    //public Texture exitWindowBackTexture;
     private bool isExitDialog = false;
 
     public Texture saveWindowBackTexture;
@@ -414,7 +412,7 @@ public class AddBox : MonoBehaviour
         //回上頁
         scale = 0.11f;
         if (Common.lastLevel == "MatrixMenuTwo")
-            if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnGoBackTexture[0], "BtnGoBack"))
+            if (GUI.Button(new Rect(screenBlack + screen_width * 0.05f - texture_width * scale * 0.5f, screen_height * 0.93f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), btnBackTexture, "BtnGoBack"))
             {
                 Application.LoadLevel("MatrixMenuTwo"); //變化組合回到編輯, 範例回到範例選擇
             }
@@ -593,7 +591,7 @@ public class AddBox : MonoBehaviour
             GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.41f - texture_width * scale * 20f * 0.5f, screen_height * 0.05f - texture_height * scale * 0.5f, texture_width * scale * 20f, texture_height * scale), spText, ScaleMode.ScaleAndCrop);
         if (isMergeBtn)
             GUI.DrawTexture(new Rect(screenBlack + screen_width * 0.41f - texture_width * scale * 20f * 0.5f, screen_height * 0.05f - texture_height * scale * 0.5f, texture_width * scale * 20f, texture_height * scale), clText, ScaleMode.ScaleAndCrop);
-        
+
 
         //標題        
         //scale = 0.4f;
@@ -648,7 +646,6 @@ public class AddBox : MonoBehaviour
         }
     }
 
-    public Shader shader;
     bool isSaveOK = false;
     string path = "";
 
@@ -695,8 +692,9 @@ public class AddBox : MonoBehaviour
                 //{
                 isHideGUI = true;
                 isSaveDialog = false;
-                RenderSettings.skybox = materials[1]; //white
-                mainCamera.GetComponentInChildren<MeshRenderer>().enabled = false;
+                mainCamera.backgroundColor = Color.white;
+                //RenderSettings.skybox = materials[1]; //white
+                //mainCamera.GetComponentInChildren<MeshRenderer>().enabled = false;
                 Application.CaptureScreenshot(path);
 
                 //LoadImage("C:\\Users\\huadi\\Desktop\\20140606005721.jpg");
@@ -887,6 +885,9 @@ public class AddBox : MonoBehaviour
 
             currentMoveValue += Time.smoothDeltaTime;
 
+            //攝影機跟著動，不然會整疊跑出螢幕
+            cameraLook.y = (Cubes[0].transform.position.y + Cubes[totLevel_Y - 1].transform.position.y) / 2;
+
             if (currentMoveValue >= separateDistance / 2)
             {
                 if (isTopCombining)
@@ -931,6 +932,9 @@ public class AddBox : MonoBehaviour
             }
 
             currentMoveValue += Time.smoothDeltaTime;
+
+            //攝影機跟著動，不然會整疊跑出螢幕
+            cameraLook.y = (Cubes[0].transform.position.y + Cubes[totLevel_Y - 1].transform.position.y) / 2;
 
             if (currentMoveValue >= separateDistance / 2)
             {
