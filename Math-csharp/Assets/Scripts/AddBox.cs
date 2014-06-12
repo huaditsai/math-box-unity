@@ -68,17 +68,23 @@ public class AddBox : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        String OSVersion = Environment.OSVersion.Version.ToString();
-        print(OSVersion);
-        if (OSVersion.Contains("5.1") || OSVersion.Contains("5.2")) //XP路徑會有中文...WWW會出錯
+        //String OSVersion = Environment.OSVersion.Version.ToString();
+        //print(OSVersion);
+        //if (OSVersion.Contains("5.1") || OSVersion.Contains("5.2")) //XP路徑會有中文...WWW會出錯
+        //{
+            tmpPath = @"C:\myTmp\Screenshot.png";
+        //    print(tmpPath);
+        //}
+        //else
+        //{
+        //    tmpPath = Application.temporaryCachePath + @"\Screenshot.png";
+        //    print(tmpPath);
+        //}
+
+        if (!System.IO.Directory.Exists(@"C:\myTmp\"))
         {
-            tmpPath = @"C:\Screenshot.png";
-            print(tmpPath);
-        }
-        else
-        {
-            tmpPath = Application.temporaryCachePath + @"\Screenshot.png";
-            print(tmpPath);
+            DirectoryInfo di = System.IO.Directory.CreateDirectory(@"C:\myTmp\");
+            di.Attributes = FileAttributes.Directory | FileAttributes.Hidden; 
         }
 
         //畫黑邊
