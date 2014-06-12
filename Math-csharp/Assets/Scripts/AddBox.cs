@@ -7,6 +7,8 @@ using System.Collections.Generic;
 
 public class AddBox : MonoBehaviour
 {
+    private string tmpPath = ""; //圖片暫存位置
+
     private Texture2D blackTexture; //畫黑邊
 
     public Camera mainCamera;
@@ -66,6 +68,20 @@ public class AddBox : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        String OSVersion = Environment.OSVersion.Version.ToString();
+        print(OSVersion);
+        if (OSVersion.Contains("5.1") || OSVersion.Contains("5.2")) //XP路徑會有中文...WWW會出錯
+        {
+            tmpPath = @"C:\Screenshot.png";
+            print(tmpPath);
+        }
+        else
+        {
+            tmpPath = Application.temporaryCachePath + @"\Screenshot.png";
+            print(tmpPath);
+        }
+
+        //畫黑邊
         blackTexture = new Texture2D(1, 1);
         blackTexture.SetPixel(0, 0, Color.black);
         blackTexture.wrapMode = TextureWrapMode.Repeat;
@@ -161,46 +177,17 @@ public class AddBox : MonoBehaviour
         cameraLook = new Vector3((maxX + minX) / 2f, (maxY + minY) / 2f, (maxZ + minZ) / 2f);
         mainCamera.transform.LookAt(cameraLook);
 
-
         fromPos = new Vector3[totLevel_Y];
         toPos_All = new Vector3[totLevel_Y];
-        //toPos_One = new Vector3[totLevel_Y];
-        //isMoved = new bool[totLevel_Y];
-
-        //for (int i = 0; i < totLevel_Y; i++)
-        //{
-        //    isMoved[i] = false;
-        //}
 
         Cubes = new GameObject[totLevel_Y];
         for (int i = 0; i < totLevel_Y; i++)
         {
             Cubes[i] = GameObject.Find(i.ToString());
+            fromPos[i] = Cubes[i].transform.position;
+            toPos_All[i] = fromPos[i] + Vector3.up * i;
         }
 
-
-        for (int i = 0; i < totLevel_Y; i++)
-        {
-            fromPos[i] = GameObject.Find(i.ToString()).transform.position;
-
-            if (totLevel_Y % 2 == 0)
-            {
-                if (i < totLevel_Y / 2)
-                    toPos_All[i] = fromPos[i] + Vector3.down * (totLevel_Y / 2 - i - 0.5f);
-                else
-                    toPos_All[i] = fromPos[i] + Vector3.up * (i - totLevel_Y / 2 + 0.5f);
-            }
-            else
-            {
-                if (i != totLevel_Y / 2) //中間的不動
-                {
-                    if (i < totLevel_Y / 2)
-                        toPos_All[i] = fromPos[i] + Vector3.down * (totLevel_Y / 2 - i);
-                    else
-                        toPos_All[i] = fromPos[i] + Vector3.up * (i - totLevel_Y / 2);
-                }
-            }
-        }
 
         //RenderSettings.skybox = materials[2];
 
@@ -236,14 +223,14 @@ public class AddBox : MonoBehaviour
     {
         for (int i = 0; i < totLevel_Y; i++)
         {
-            Cubes[i].transform.position = Vector3.Lerp(Cubes[i].transform.position, to[i], Time.smoothDeltaTime * 3.5f);
+            Cubes[i].transform.position = Vector3.Lerp(Cubes[i].transform.position, to[i], Time.deltaTime * 3.5f);
         }
 
         //攝影機跟著動，不然會整疊跑出螢幕
         cameraLook.y = (Cubes[0].transform.position.y + Cubes[totLevel_Y - 1].transform.position.y) / 2;
 
-        currentMoveValue += Time.smoothDeltaTime;
-        if (currentMoveValue >= separateDistance / 2)
+        currentMoveValue += Time.deltaTime;
+        if (currentMoveValue >= 1.5f)
         {
             for (int i = 0; i < totLevel_Y; i++)
             {
@@ -274,7 +261,7 @@ public class AddBox : MonoBehaviour
                 //                RenderSettings.skybox = materials[2]; //orange
                 //mainCamera.GetComponentInChildren<MeshRenderer>().enabled = true;
 
-                StartCoroutine("LoadImage", path);
+                StartCoroutine("LoadImage", savePath);
 
                 countDownTime = 2;
                 isStartTimer = false;
@@ -566,7 +553,7 @@ public class AddBox : MonoBehaviour
         gSkin.FindStyle(allSeparateBtnStyle).contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
         if (GUI.Button(new Rect(screenBlack + screen_width * 0.065f - texture_width * scale * 0.5f, screen_height * 0.35f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), allSeparateBtnString, allSeparateBtnStyle))
         {
-            if (!isCombining && !isSeparating)
+            if (!isSeparateBtn_All && !isCombining && !isSeparating)
             {
                 isSeparateBtn_All = true;
                 isSeparateBtn = false;
@@ -657,8 +644,8 @@ public class AddBox : MonoBehaviour
         }
     }
 
-    bool isSaveOK = false;
-    string path = "";
+    private bool isSaveOK = false;
+    private string savePath = "";
 
     private void SaveWindow(int id) //存檔畫面
     {
@@ -666,22 +653,22 @@ public class AddBox : MonoBehaviour
 
         if (!isSaveOK)
         {
-            path = "";
+            savePath = "";
 
             if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.23f - texture_height * scale * 0.2f * 0.5f, texture_width * scale, texture_height * scale * 0.2f), "", "SaveDeskTop"))
             {
-                path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+                savePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
             }
             if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.33f - texture_height * scale * 0.2f * 0.5f, texture_width * scale, texture_height * scale * 0.2f), "", "SaveMyDoc"))
             {
-                path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+                savePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
             }
             if (GUI.Button(new Rect(screen_width * 0.32f - texture_width * scale * 0.5f, screen_height * 0.43f - texture_height * scale * 0.2f * 0.5f, texture_width * scale, texture_height * scale * 0.2f), "", "SaveMyPic"))
             {
-                path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+                savePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
             }
 
-            if (path.Length != 0)
+            if (savePath.Length != 0)
             {
                 //if (!isHideLine)
                 //{
@@ -706,7 +693,8 @@ public class AddBox : MonoBehaviour
                 mainCamera.backgroundColor = Color.white;
                 //RenderSettings.skybox = materials[1]; //white
                 //mainCamera.GetComponentInChildren<MeshRenderer>().enabled = false;
-                Application.CaptureScreenshot(path);
+                
+                Application.CaptureScreenshot(tmpPath);
 
                 //LoadImage("C:\\Users\\huadi\\Desktop\\20140606005721.jpg");
                 isStartTimer = true;
@@ -737,12 +725,12 @@ public class AddBox : MonoBehaviour
 
     private IEnumerator LoadImage(string path) //因為renderTexture我存不了shader
     {
-        WWW www = new WWW("file:///" + path);
+        WWW www = new WWW("file:///" + tmpPath);
         yield return www;
-        Texture2D tmpTexture = new Texture2D(1024, 1024, TextureFormat.ARGB32, false);
+        Texture2D tmpTexture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGBA32, false);
         www.LoadImageIntoTexture(tmpTexture);
 
-        Texture2D myTexture2D = new Texture2D((int)renderTextureRect.width, (int)renderTextureRect.height, TextureFormat.ARGB32, false);
+        Texture2D myTexture2D = new Texture2D((int)renderTextureRect.width, (int)renderTextureRect.height, TextureFormat.RGBA32, false);
         for (int y = (int)renderTextureRect.yMin; y < (int)renderTextureRect.yMax; y++)
             for (int x = (int)renderTextureRect.xMin; x < (int)renderTextureRect.xMax; x++)
                 myTexture2D.SetPixel(x - (int)renderTextureRect.xMin, y - (int)renderTextureRect.yMin, tmpTexture.GetPixel(x, y));
@@ -760,7 +748,7 @@ public class AddBox : MonoBehaviour
         //}
 
         myTexture2D.Apply();
-        File.WriteAllBytes(path, myTexture2D.EncodeToPNG());
+        File.WriteAllBytes(path, myTexture2D.EncodeToJPG());
     }
 
 

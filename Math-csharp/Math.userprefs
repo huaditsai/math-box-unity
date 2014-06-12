@@ -1,9 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\DepthNormalTexImageEffect.shader">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\Image Effects (Pro Only)\PostEffectsBase.js">
     <Files>
+      <File FileName="Assets\Scripts\AddBox.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Splash.cs" Line="1" Column="1" />
-      <File FileName="Assets\DepthNormalTexImageEffect.shader" Line="1" Column="1" />
+      <File FileName="Assets\Standard Assets\Image Effects (Pro Only)\PostEffectsBase.js" Line="112" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
