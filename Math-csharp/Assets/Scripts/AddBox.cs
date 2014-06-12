@@ -439,13 +439,61 @@ public class AddBox : MonoBehaviour
         //    GUI.Label(new Rect(screen_width * 0.83f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale), count + " 個", "Count");
         //}
 
-        scale = 0.27f;
+       
+        //分層按鈕
+        scale = 0.23f;
+        gSkin.FindStyle(allSeparateBtnStyle).fontSize = (int)(texture_height * scale * 0.2f);
+        gSkin.FindStyle(allSeparateBtnStyle).contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.18f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), allSeparateBtnString, allSeparateBtnStyle))
+        {
+            if (!isSeparateBtn_All && !isCombining && !isSeparating)
+            {
+                isSeparateBtn_All = true;
+                isSeparateBtn = false;
+                isMergeBtn = false;
+
+                if (isSeparate_All)
+                {
+                    allSeparateBtnString = "全部分開";
+                    allSeparateBtnStyle = "SpAll";
+                }
+                else
+                {
+                    allSeparateBtnString = "全部組合";
+                    allSeparateBtnStyle = "CloseAll";
+                }
+
+                isSeparate_All = !isSeparate_All;
+            }
+        }
+        gSkin.FindStyle("SpOne").fontSize = (int)(texture_height * scale * 0.2f);
+        gSkin.FindStyle("SpOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.31f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層分開", "SpOne"))
+        {
+            if (!isSeparateBtn_All)
+            {
+                isMergeBtn = false;
+                isSeparateBtn = !isSeparateBtn;
+            }
+        }
+        gSkin.FindStyle("CloseOne").fontSize = (int)(texture_height * scale * 0.2f);
+        gSkin.FindStyle("CloseOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.42f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層組合", "CloseOne"))
+        {
+            if (!isSeparateBtn_All)
+            {
+                isSeparateBtn = false;
+                isMergeBtn = !isMergeBtn;
+            }
+        }
+
+        scale = 0.22f;
         //if (isShowSetting)
         //{
         gSkin.FindStyle("Settings").fontSize = (int)(texture_height * scale * 0.2f);
         gSkin.FindStyle("Settings").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
         //設定們
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.24f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.56f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "另存圖片", "Settings"))
         {
             isSaveDialog = true;
 
@@ -496,7 +544,7 @@ public class AddBox : MonoBehaviour
             gSkin.FindStyle("Settings2").fontSize = (int)(texture_height * scale * 0.4f);
             gSkin.FindStyle("Settings2").contentOffset = new Vector2(0, 0);
         }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.453f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.68f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), countText, "Settings2"))
         {
             count = 0;
             if (!isShowCount)
@@ -515,7 +563,7 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isShowCount = !isShowCount;
         }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.666f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.8f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), lineText, "Settings"))
         {
             if (!isHideLine) //隱藏
             {
@@ -539,7 +587,7 @@ public class AddBox : MonoBehaviour
             //isShowSetting = false;
             isHideLine = !isHideLine;
         }
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.88f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
+        if (GUI.Button(new Rect(screenBlack + screen_width * 0.88f - texture_width * scale * 0.5f, screen_height * 0.92f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "回主選單", "Settings"))
         {
             Common.init();
             //isShowSetting = false;
@@ -547,52 +595,7 @@ public class AddBox : MonoBehaviour
         }
         //} 
 
-        //分層按鈕
-        scale = 0.15f;
-        gSkin.FindStyle(allSeparateBtnStyle).fontSize = (int)(texture_height * scale * 0.2f);
-        gSkin.FindStyle(allSeparateBtnStyle).contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.065f - texture_width * scale * 0.5f, screen_height * 0.35f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), allSeparateBtnString, allSeparateBtnStyle))
-        {
-            if (!isSeparateBtn_All && !isCombining && !isSeparating)
-            {
-                isSeparateBtn_All = true;
-                isSeparateBtn = false;
-                isMergeBtn = false;
-
-                if (isSeparate_All)
-                {
-                    allSeparateBtnString = "全部分開";
-                    allSeparateBtnStyle = "SpAll";
-                }
-                else
-                {
-                    allSeparateBtnString = "全部組合";
-                    allSeparateBtnStyle = "CloseAll";
-                }
-
-                isSeparate_All = !isSeparate_All;
-            }
-        }
-        gSkin.FindStyle("SpOne").fontSize = (int)(texture_height * scale * 0.2f);
-        gSkin.FindStyle("SpOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.065f - texture_width * scale * 0.5f, screen_height * 0.6f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層分開", "SpOne"))
-        {
-            if (!isSeparateBtn_All)
-            {
-                isMergeBtn = false;
-                isSeparateBtn = !isSeparateBtn;
-            }
-        }
-        gSkin.FindStyle("CloseOne").fontSize = (int)(texture_height * scale * 0.2f);
-        gSkin.FindStyle("CloseOne").contentOffset = new Vector2(0, (int)(texture_height * scale * 0.01f));
-        if (GUI.Button(new Rect(screenBlack + screen_width * 0.065f - texture_width * scale * 0.5f, screen_height * 0.7f - texture_height * scale * 0.5f, texture_width * scale, texture_height * scale * 0.5f), "單層組合", "CloseOne"))
-        {
-            if (!isSeparateBtn_All)
-            {
-                isSeparateBtn = false;
-                isMergeBtn = !isMergeBtn;
-            }
-        }
+        
 
         scale = 0.035f;
         if (isSeparateBtn)
